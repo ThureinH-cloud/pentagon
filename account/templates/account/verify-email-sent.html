@@ -1,0 +1,29 @@
+{% extends 'account/base.html' %}
+{% block content %}
+<section class="max-w-2xl px-6 py-8 mx-auto bg-white dark:bg-gray-900">
+ <header>
+     <div class="flex-1">
+         <a class="btn btn-ghost text-xl">FeelWrite</a>
+       </div>
+ </header>
+
+ <main class="mt-8">
+     <h2 class="text-gray-700 dark:text-gray-200">Hi {{user}},</h2>
+
+     <p class="mt-2 leading-loose text-gray-600 dark:text-gray-300">
+         Thank you for joining this community.
+         
+     </p>
+     
+     <a href="{{full_link}}" class="btn btn-active">Verify Email</a>
+     
+     <p class="mt-8 text-gray-600 dark:text-gray-300">
+         Thanks, <br>
+         FeelWrite team
+     </p>
+ </main>
+ 
+
+ 
+</section>
+{% endblock  %}

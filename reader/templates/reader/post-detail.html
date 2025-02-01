@@ -1,0 +1,86 @@
+{% extends 'reader/base.html' %}
+{% block content %}
+{% load daisyui_filters %}
+{% load crispy_forms_tags %}
+  <div class="min-h-screen bg-base-200">
+    <div class="grid grid-cols-7 gap-5 ">
+        <div class="col-start-2 col-span-4 mt-5">
+            <div class="flex justify-between items-center">
+                <div class="flex">
+                  <div class="avatar">
+                    <div class="w-20 rounded-full mr-3">
+                        <img
+                          src="{{article.get_account_status.profile.url}}"
+                          style="object-fit: cover;height:100%"
+                          alt="Shoes" />
+                      </div>
+                      
+                </div>
+                <div class="flex-row">
+                  {{article.author}}
+                  <br>
+                  {{article.posted_at}}
+                  <br>
+                  <div class="badge badge-accent badge-outline">{{reading_time}} min read</div>
+
+                </div>
+                </div>
+                
+                <div class="">
+                  
+                    <a href="{% url 'article-favorite' article.id %}" class="btn btn-secondary">
+                      Add To Your Favorites
+                      <i class="fa-solid fa-bookmark"></i>
+                     </a>
+                </div>
+            </div>
+            <div class="divider divider-neutral"></div>
+
+            <figure>
+                <img
+                  style="object-fit: cover;height:500px;width:100%"
+                  src="{{article.photo.url}}"
+                  alt="Album" />
+              </figure>        
+                <div class="divider divider-neutral"></div>
+               
+                  <h2 class="text-xl text-balance font-semibold">Title : {{article.title}}</h2>
+                  <p class="antialiased tracking-wide	leading-relaxed                  ">{{article.content}}</p>
+                  
+                  <div class="divider divider-neutral"></div>
+                 
+                  <div class="my-5">
+                    
+                    {% for article_rev in article_reviews %}
+                    <div class="flex items-center ">
+                      <div class="avatar">
+                          <div class="w-10 rounded-full mr-3">
+                              <img
+                                src="{{article_rev.get_commenter.profile.url}}"
+                                style="object-fit: cover;height:100%"
+                                alt="Shoes" />
+                            </div>
+                      </div>
+                      <div class="">
+                        {{article_rev.user}}
+                        <br>
+                      </div>
+                    </div>
+                    <div class="card-body ml-6">
+                      {{article_rev.comment}}
+                    </div>
+                    {% endfor %}
+                      
+                  </div>
+                  <div class="">
+                    <form action="" method="post">
+                      {% csrf_token %}
+                      
+                      {{article_review|crispy}}
+                      <input type="submit" class="btn btn-active" value="Submit">
+                    </form>
+                  </div>
+        </div>
+      </div>
+  </div>
+{% endblock  %}

@@ -1,0 +1,60 @@
+{% extends 'account/base.html' %}
+{% load daisyui_filters %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+      {% block title %}
+      SignIn - Pentagon
+    {% endblock  %}
+    </title>
+</head>
+<body>
+    {% block content %}
+    
+    <div class="hero bg-base-200 min-h-screen">
+        <div class="hero-content">
+          <div class="max-w-md">
+            {% for message in messages %}
+            <div class="message {{ message.tags }}">
+              <div role="alert" class="alert alert-error mb-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 shrink-0 stroke-current"
+                  fill="none"
+                  viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{{message}}</span>
+              </div>
+            </div>
+           {% endfor %}
+            <a href="{% url 'home' %}" class="btn btn-ghost text-xl flex justify-center">Pentagon</a>
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                  <form action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{form|crispy}}
+                    <input type="submit" value="Sign In" class="btn w-full">
+                    <div class="divider">OR</div>
+                    <div class="flex justify-center">
+                      <a href="{% url 'reset_password' %}" class="link">Forget Password?</a>
+                    </div>
+                  </form>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+    {% endblock  %}
+    
+</body>
+</html>

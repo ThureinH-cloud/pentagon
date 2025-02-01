@@ -1,0 +1,95 @@
+{% extends 'writer/writer-dashboard.html' %}
+{% load daisyui_filters %}
+{% load crispy_forms_tags %}
+{% block writer %}
+<div class="justify-center">
+    <div class="breadcrumbs text-sm m-3">
+        <ul>
+          <li><a href="{% url 'profile' %}">Account</a></li>
+          <li>Settings</li>
+        </ul>
+      </div>
+    <div class="flex">
+      <div class="card m-3 card-side bg-base-200 shadow-xl">
+        <div class="card-body">
+            <div class="avatar">
+                <div class="w-24 rounded-full">
+                  <img src="{{user_status.profile.url}}" />
+                </div>
+              </div>
+            <div class="mx-3 my-2">
+              <h4 class=" my-3">Name:{{user}} </h4>
+              <h4 class="my-3">Email:{{user.email}}</h4>
+            <div class="flex my-3">
+                Verified: 
+            {% if user_status.is_verified %}
+            <div class="text-success flex"><svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 shrink-0 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg> Verified</div>
+              {% else %}
+              <div class="text-warning flex">
+                <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 shrink-0 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24">
+                <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+                <div class="lg:tooltip tooltip" data-tip="You must verify your email!">
+                  Not Verified
+                </div>
+              </div>
+
+            {% endif %}
+            </div>
+            <div class="my-3">
+              Plan:  
+              {% if user_subscription.is_active %}
+                {{user_subscription.subscription_plan}} 
+                <br>
+                <h3> Remaining:{{user_subscription.remaining}} </h3>
+                <br>
+                <a class="btn btn-error mb-2" href="{% url 'delete-subscription' user_subscription.paypal_subscription_id %}">Deactivate Plan</a>
+                <a href="{% url 'update-subscription' user_subscription.paypal_subscription_id %}" class="btn btn-accent">Change 
+                {% if user_subscription.subscription_plan == "Standard" %}
+                  Premium
+                  {% else %}
+                  Standard
+                {% endif %}
+                   Plan</a>
+                {% else %}
+                None
+              {% endif %}
+                
+            </div>
+            </div>
+        </div>
+      </div>
+      <div class="card m-3 card-side bg-base-200 shadow-xl">
+        <div class="card-body">
+            
+            <div class="mx-3 my-2">
+              <form action="" method="post">
+                {% csrf_token %}
+                {{form|crispy}}
+                <input type="submit" value="Update" class="btn btn-active">
+              </form>
+                
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock  %}

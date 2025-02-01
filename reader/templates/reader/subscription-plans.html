@@ -1,0 +1,146 @@
+{% extends 'reader/base.html' %}
+{% block content %}
+<div class=" bg-base-200 min-h-screen">
+    <div class="flex justify-center">
+      <div class="w-96">
+        <div class="card my-4 bg-base-100 w-100 shadow-xl">
+            <div class="card-body">
+                <div class="flex justify-center">
+                    <h3 class="uppercase">Subscription Plans</h3>
+                </div>
+                <p class="text-center">You need to choose plans</p>
+
+            </div>
+          </div>
+      </div>
+      
+    </div>
+    <div class="flex justify-center">
+        <div class="m-4">
+            <div class="w-96">
+                <div class="card my-4 bg-base-100 w-100 shadow-xl">
+                    <div class="card-body ">
+                        <div class="flex-col self-center text-center">
+                            <h3 class="uppercase ">Standard Subscription</h3>
+                            <div class="divider"></div>
+                            <span class="text-5xl">$4.99</span>
+                            <span class="text-gray-500">/month</span>
+                            <div class="divider"></div>
+                            <p class="">Join us for standard access here.</p>
+                            <p class="mt-2">(Limited article access)</p>
+                            <div class="divider"></div>
+                            <div class="w-80">
+                                <button class="btn" onclick="my_modal_3.showModal()">Get Started</button>
+                            </div>
+                            <script src="https://www.paypal.com/sdk/js?client-id=AXSnZGWecd9YWYINcPRPPGegSAM2Hc-cLt-yUc38jq6lqBNnAxo0E5Gwf_N3udPQqsByEuIHvvG-UjVd&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
+                            <script>
+                              function urlsafeBase64Encode(input) {
+                                // First, create a Base64 encoded string using btoa
+                                let base64 = btoa(input);
+                              
+                                // Replace `+` with `-`, `/` with `_`, and remove any trailing `=`
+                                base64 = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+                              
+                                return base64;
+                              }
+                              paypal.Buttons({
+                                  style: {
+                                      shape: 'pill',
+                                      color: 'gold',
+                                      layout: 'vertical',
+                                      label: 'subscribe'
+                                  },
+                                  createSubscription: function(data, actions) {
+                                    return actions.subscription.create({
+                                      /* Creates the subscription */
+                                      plan_id: 'P-38363656RR1276033M6KPIII'
+                                    });
+                                  },
+                                  onApprove: function(data, actions) {
+                                    const token = data.subscriptionID;
+                                    const encodedToken=urlsafeBase64Encode(token)
+                                    const current_url='/account/create-subscription/?token='+encodedToken+"&plan=Standard"
+                                    window.open(current_url,'_self')
+                                  }
+                              }).render('#paypal-button-container-P-38363656RR1276033M6KPIII'); // Renders the PayPal button
+                            </script>
+                        </div>
+                        
+                    </div>
+                  </div>
+              </div>
+        </div>
+        <div class="m-4">
+            <div class="w-96">
+                <div class="card my-4 bg-base-100 w-100 shadow-xl">
+                    <div class="card-body ">
+                        <div class="flex-col self-center text-center">
+                            <h3 class="uppercase">Premium Subscription</h3>
+                            <div class="divider"></div>
+                            <span class="text-5xl">$9.99</span>
+                            <span>/month</span>
+                            <div class="divider"></div>
+                            <p class="">Elevate your experience with premium here:</p>
+                            <p class="mt-2">(Full article access)</p>
+                            <div class="divider"></div>
+                            <button class="btn" onclick="my_modal_4.showModal()">Get Started</button>
+                        <script>
+                          function urlsafeBase64Encode(input) {
+                            // First, create a Base64 encoded string using btoa
+                            let base64 = btoa(input);
+                          
+                            // Replace `+` with `-`, `/` with `_`, and remove any trailing `=`
+                            base64 = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+                          
+                            return base64;
+                          }// Renders the PayPal button
+                        paypal.Buttons({
+                            style: {
+                                shape: 'pill',
+                                color: 'gold',
+                                layout: 'vertical',
+                                label: 'subscribe'
+                            },
+                            createSubscription: function(data, actions) {
+                                return actions.subscription.create({
+                                /* Creates the subscription */
+                                plan_id: 'P-2EA74263YC2500708M6KPIXI'
+                                });
+                            },
+                            onApprove: function(data, actions) {
+                                const token = data.subscriptionID;
+                                const encodedToken=urlsafeBase64Encode(token)
+                                const current_url='/account/create-subscription/?token='+encodedToken+"&plan=Premium"
+                                window.open(current_url,'_self')
+                            }
+                        }).render('#paypal-button-container-P-2EA74263YC2500708M6KPIXI'); 
+                        
+                        </script>
+                    </div>
+                  </div>
+              </div>
+        </div>
+        <dialog data="Standard" id="my_modal_3" class="modal          ">
+            <div class="modal-box ">
+              <h3 class="text-lg font-bold text-center">Payment Methods</h3>
+              <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+              </form>
+                 <div id="paypal-button-container-P-38363656RR1276033M6KPIII" style="padding: 30px"></div>
+            </div>
+          </dialog>
+          <dialog data="Premium" id="my_modal_4" class="modal          ">
+            <div class="modal-box">
+              <h3 class="text-lg font-bold text-center">Payment Methods</h3>
+
+              <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+              </form>
+              <div id="paypal-button-container-P-2EA74263YC2500708M6KPIXI" style="padding: 30px;"></div>
+
+            </div>
+          </dialog>
+      </div>
+    </div>
+
+{% endblock  %}

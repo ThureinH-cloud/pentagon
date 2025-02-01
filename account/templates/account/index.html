@@ -1,0 +1,83 @@
+{% extends 'account/base.html' %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  {% block content %}
+   <div class="navbar bg-base-100">
+    <div class="navbar-start">
+      <div class="dropdown">
+        <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h8m-8 6h16" />
+          </svg>
+        </div>
+      </div>
+      <a class="btn btn-ghost text-xl">Pentagon</a>
+    </div>
+
+    <div class="navbar-end gap-3">
+      {% if user.is_authenticated %}
+      <div class="dropdown dropdown-end">
+        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+          <div class="w-10 rounded-full">
+            <img
+              alt="Tailwind CSS Navbar component"
+              src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+          </div>
+        </div>
+        <ul
+          tabindex="0"
+          class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+          <li><a href="{% url 'writer-dashboard' %}">Dashboard</a></li>
+          <li><a href="{% url 'profile' %}">Settings</a></li>
+          <li><a href="{% url 'sign-out' %}">Logout</a></li>
+        </ul>
+      </div>
+      {{user}}
+      {% else %}
+      <a href="{% url 'sign-up' %}" class="btn">Sign Up</a>
+      <a href="{% url 'sign-in' %}" class="btn">Sign In</a>
+      {% endif %}
+      
+    </div>
+   </div>
+  <div class="hero bg-base-200 min-h-screen" id="hero">
+      <div class="hero-content text-center">
+        <div class="max-w-xl">
+          <h1 class="text-5xl font-bold uppercase">Pentagon ... </h1>
+          <p class="py-6">
+           Welcome Browse through our extensive collection of carefully curated content.
+          </p>
+          <button class="btn btn-primary">Get Started Today</button>
+        </div>
+      </div>
+  </div>
+
+  <div class="hero bg-base-300 min-h-screen">
+    <div class="hero-content text-center">
+      <div class="max-w-md">
+        <h1 class="text-5xl font-bold">Hello there</h1>
+        <p class="py-6">
+          Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
+          quasi. In deleniti eaque aut repudiandae et a id nisi.
+        </p>
+        <button class="btn btn-primary">Get Started</button>
+      </div>
+    </div>
+  </div>
+  {% endblock  %}
+</body>
+</html>

@@ -1,0 +1,21 @@
+{% extends 'reader/base.html' %}
+
+{% block content %}
+<div class=" bg-base-200 min-h-screen">
+      <div class="flex justify-center">
+        <div class="max-w-md">
+         
+          <div class="card my-4 bg-base-100 w-100 shadow-xl">
+              <div class="card-body">
+                <i class="fa-solid fa-lock-open text-center text-5xl"></i>
+                  <div class="flex justify-center">
+                      <h3 class="uppercase">Subscription UnLocked</h3>
+                  </div>
+                  <p class="text-sm my-5">You can browse {{SubscriptionPlan}} articles </p>
+                  <a href="{% url 'client-home' %}" class="btn btn-active uppercase">Go To Blog</a>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+{% endblock  %}

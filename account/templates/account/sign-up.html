@@ -1,0 +1,42 @@
+{% extends 'account/base.html' %}
+{% load daisyui_filters %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+      {% block title %}
+        SignUp - Pentagon
+      {% endblock  %}
+    </title>
+</head>
+<body>
+    {% block content %}
+
+    <div class="hero bg-base-200 min-h-screen">
+        <div class="hero-content">
+          <div class="max-w-md">
+            <a class="btn btn-ghost text-xl flex justify-center">Pentagon</a>
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{form|crispy}}
+                            <input type="submit" value="Sign Up" class="btn w-full">
+                            <div class="divider">OR</div>
+        
+                            <div class="flex justify-center">
+                              <a href="{% url 'sign-in' %}" class="link">Sign In</a>
+        
+                            </div>
+                          </form>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    {% endblock  %}
+</body>
+</html>

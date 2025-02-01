@@ -1,0 +1,188 @@
+from django.shortcuts import render,redirect,get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Subscription,Favorite
+from account.models import AccountStatus
+from writer.models import Article,ArticleReview
+from django.contrib.auth.models import User
+from writer.forms import ArticleReviewForm
+from .paypal import get_access_token,cancel_subscription,update_subscription_plan
+from django.db.models import Avg,Count
+from writer.forms import ArticleReviewForm
+from django.http import HttpResponse
+# Create your views here.
+@login_required(login_url="sign-in")
+def client_home(request):
+    account_status=AccountStatus.objects.get(user_id=request.user.id)
+    accounts=AccountStatus.objects.all()
+    articles=Article.objects.all()
+    categories=Article.objects.values('category').distinct()
+    context={
+        "articles":articles,
+        'account_status':account_status,
+        'accounts':accounts,
+        'categories':categories
+    }
+    return render(request, "reader/home.html",context)
+
+@login_required(login_url="sign-in")
+def article_detail(request,id):
+    article=Article.objects.get(id=id)
+    if article.is_premium is True:
+        try:
+            Subscription.objects.get(user=request.user, is_active=True,subscription_plan='Premium')
+        except Subscription.DoesNotExist:
+            return redirect("subscription-locked")
+    elif article.is_standard is True:
+        try:
+           sub=Subscription.objects.get(user=request.user, is_active=True)
+           if sub.subscription_plan == 'Standard' or 'Premium':
+               pass
+        except Subscription.DoesNotExist:
+            return redirect("subscription-locked")
+    else:
+        pass
+    article_reviews=ArticleReview.objects.filter(article=article)
+    article_reviewer=ArticleReview.objects.filter(user=request.user,article=article)
+    
+    article_review=ArticleReviewForm(request.POST or None)
+    
+    if article_review.is_valid():
+        new_review=article_review.save(commit=False)
+        new_review.article=article
+        new_review.user=request.user
+        new_review.save()
+        return redirect('client-home')
+    if not request.session.get(f'viewed_post_{id}', False):
+        article.view_count += 1
+        article.save()
+        
+        request.session[f'viewed_post_{id}'] = True
+    article_author=article.author
+    account_status=AccountStatus.objects.get(user_id=request.user.id)
+
+    context={
+        "article":article,
+        'article_author':article_author,
+        'reading_time': article.reading_time(),
+        'account_status':account_status,
+        'article_review':article_review,
+        'article_reviews':article_reviews
+    }
+    return render(request, "reader/post-detail.html", context)
+
+@login_required(login_url="sign-in")
+def standard_posts(request):
+    try:
+        sub_user=Subscription.objects.get(user=request.user,is_active=True)
+    except Subscription.DoesNotExist:
+        return redirect("subscription-locked")
+    if sub_user.subscription_plan == 'Premium' or 'Standard':
+        articles=Article.objects.filter(is_standard=True)
+        context={
+            "articles":articles,
+        }
+        return render(request, "reader/standard-posts.html", context)
+    else:
+        return redirect("subscription-locked")
+    
+@login_required(login_url="sign-in")
+def subscription_posts(request):
+    param=request.GET.get("select")
+    try:
+        sub_user=Subscription.objects.get(user=request.user,is_active=True)
+    except Subscription.DoesNotExist:
+        return redirect("subscription-locked")
+    if "Latest" in param:
+        articles=Article.objects.filter(is_standard=True).order_by("-posted_at")
+    elif "Highest" in param:
+        articles=Article.objects.filter(is_standard=True).annotate(avg_rating=Avg('article_review__rating')).order_by("-avg_rating")
+    elif "Most Favorite" in param:
+        articles=Article.objects.filter(is_standard=True).annotate(favorite_count=Count('favorite__article')).order_by("-favorite_count")
+    context={
+        "articles":articles,
+    }
+    return render(request, "reader/subscription-posts-filter.html", context)
+
+@login_required(login_url="sign-in")
+def premium_posts(request):
+    try:
+        sub_user=Subscription.objects.get(user=request.user,is_active=True)
+    except Subscription.DoesNotExist:
+        return redirect("subscription-locked")
+    if sub_user.subscription_plan == "Premium":
+        articles=Article.objects.filter(is_premium=True,is_standard=True)
+        context={
+            "articles":articles,
+        }
+        return render(request, "reader/premium-posts.html", context)
+    else:
+        return redirect("subscription-locked")
+@login_required(login_url="sign-in")
+def subscription_locked(request):
+    return render(request, "reader/subscription-locked.html")
+
+@login_required(login_url='sign-in')
+def subscription_plans(request):
+    return render(request, "reader/subscription-plans.html")
+
+def search(request):
+    pass
+
+@login_required(login_url="sign-in")
+def subscription_success(request):
+    return render(request, "reader/subscription-success.html")
+
+def category(request,category):
+    category_articles=Article.objects.filter(category=category)
+    context={
+        "category_articles":category_articles
+    }
+    return render(request, "reader/category_articles.html", context)
+
+def author(request,author):
+    pass
+
+@login_required(login_url="sign-in")
+def delete_subscription(request,subId):
+    access_token=get_access_token()
+    cancel_subscription(access_token,subId)
+    sub=Subscription.objects.get(subscriber_email=request.user.email,paypal_subscription_id=subId)
+    sub.delete()
+    return render(request, "reader/delete-subscription.html")
+
+@login_required(login_url="sign-in")
+def update_subscription(request,subId):
+    access_token=get_access_token()
+    approve_url=update_subscription_plan(access_token,subId)
+    if approve_url:
+        return redirect(approve_url)
+    else:
+        return HttpResponse("Error: Unable to update subscription plan.")
+
+@login_required(login_url='sign-in')
+def subscription_update_success(request):
+    
+    return render(request, "reader/subscription-update-success.html")
+
+@login_required(login_url="sign-in")
+def tab(request):
+    param=request.GET.get("select")
+    articles=None
+    if "Latest" in param:
+        articles=Article.objects.all().order_by("-posted_at")
+    elif "Highest" in param:
+        articles=Article.objects.annotate(avg_rating=Avg('article_review__rating')).order_by("-avg_rating")
+    else:
+        articles=Article.objects.annotate(favorite_count=Count('favorite__article')).order_by("-favorite_count")
+    context={
+        "articles":articles,
+        "param":param
+    }
+    return render(request, "reader/select-tab.html",context)
+
+@login_required(login_url="sign-in")
+def article_favorite(request,id):
+    articleObj=Article.objects.get(id=id)
+    if request.method == "GET":
+        Favorite.objects.create(user=request.user, article=articleObj)
+    return redirect("client-home")
