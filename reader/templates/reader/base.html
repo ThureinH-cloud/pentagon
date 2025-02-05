@@ -12,6 +12,10 @@
     <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
 </head>
 <body>
+  
+  
+    <!-- Main content -->
+   
     <div class="navbar bg-base-100">
         <div class="navbar-start">
           <div class="dropdown">
@@ -66,10 +70,17 @@
         </div>
        </div>
        {{ redirect_to_login_immediately }}
-
+       
+        
+        
     {% block content %}
       
     {% endblock  %}
+    
+    
+     
+    
+    
     <script src="https://cdn.tailwindcss.com"></script>
    
 </body>

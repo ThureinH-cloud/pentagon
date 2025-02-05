@@ -1,0 +1,48 @@
+{% extends 'writer/writer-dashboard.html' %}
+{% block writer %}
+    <div class="justify-center">
+        <div class="grid grid-cols-3 gap-2 mx-3 my-3">
+            <div class="card bg-base-100 w-96 shadow-xl">
+                <figure>
+                    <i class="fa-solid fa-medal text-6xl"></i>
+                </figure>
+                <div class="card-body items-center text-center">
+                  <h2 class="card-title">Silver</h2>
+                  <p>
+                    No need for your average view count.
+                    Your email is already verified.
+                  </p>
+                  <div class="card-actions justify-end">
+
+                  </div>
+                </div>
+              </div>
+              <div class="card bg-base-100 w-96 shadow-xl">
+                <figure>
+                   <i class="fa-solid fa-award text-6xl text-warning"></i>
+                </figure>
+                <div class="card-body items-center text-center">
+                  <h2 class="card-title">Gold</h2>
+                  <p>
+                    <ul>
+                        <li>Your average view count must be over 500.</li>
+                    </ul>
+                  </p>
+                  <div class="card-actions justify-end">
+                  </div>
+                </div>
+              </div>
+              <div class="card bg-base-100 w-96 shadow-xl">
+                <figure>
+                    <i class="fa-solid fa-trophy text-5xl text-warning"></i>
+                </figure>
+                <div class="card-body items-center text-center">
+                  <h2 class="card-title">Platinum</h2>
+                  <p></p>
+                  <div class="card-actions justify-end">
+                  </div>
+                </div>
+              </div>
+        </div>
+    </div>
+{% endblock  %}

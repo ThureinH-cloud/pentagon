@@ -15,7 +15,7 @@ class CreateUserForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     username=forms.CharField(widget=TextInput())
     password=forms.CharField(widget=PasswordInput())
-    # captcha=ReCaptchaField(required=True, widget=ReCaptchaV2Checkbox)
+    # captcha=ReCaptchaField(required=True, widget=ReCaptchaV2Checkbox,label="Check")
     
 class UpdateUserForm(ModelForm):
     class Meta:

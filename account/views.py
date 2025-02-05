@@ -1,4 +1,3 @@
-import json
 from django.db import IntegrityError
 from django.shortcuts import render,redirect
 from .forms import CreateUserForm,LoginForm,UpdateUserForm
@@ -58,7 +57,7 @@ def dashboard(request):
 @login_required(login_url='sign-in')
 def profile(request):
     update_form=UpdateUserForm(request.POST or None, instance=request.user)
-    user_status=AccountStatus.objects.get(user_id=request.user.id)
+    user_status=AccountStatus.objects.get(user=request.user)
     user=User.objects.get(username=request.user.username)
     
     try:

@@ -27,4 +27,4 @@ class ArticleReviewForm(ModelForm):
 class ArticleCollectionForm(ModelForm):
     class Meta:
         model=ArticleCollection
-        fields=['name','article']
+        fields=['name']

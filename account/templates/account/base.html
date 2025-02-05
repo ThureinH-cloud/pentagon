@@ -7,7 +7,7 @@
 
     <title>
         {% block title %}
-      
+            Pentagon
         {% endblock  %}
     </title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.min.css" rel="stylesheet" type="text/css" />
@@ -16,10 +16,15 @@
 </head>
 <body>
     {% block content %}
-      
+    
     {% endblock  %}
     {{ redirect_to_login_immediately }}
-
+    {% block email %}
+    <div class="join">
+        <input class="input input-bordered join-item" placeholder="Email" />
+        <button class="btn join-item rounded-r-full">Subscribe</button>
+    </div>
+    {% endblock  %}
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{% static 'js/loading.js' %}"></script>
 </body>

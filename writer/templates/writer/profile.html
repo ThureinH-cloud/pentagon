@@ -59,7 +59,7 @@
               {% if user_subscription.is_active %}
                 {{user_subscription.subscription_plan}} 
                 <br>
-                <h3> Remaining:{{user_subscription.remaining}} </h3>
+                <h3> Remaining:{{user_subscription.remaining}} days </h3>
                 <br>
                 <a class="btn btn-error mb-2" href="{% url 'delete-subscription' user_subscription.paypal_subscription_id %}">Deactivate Plan</a>
                 <a href="{% url 'update-subscription' user_subscription.paypal_subscription_id %}" class="btn btn-accent">Change 

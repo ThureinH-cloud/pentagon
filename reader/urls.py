@@ -17,5 +17,5 @@ urlpatterns = [
     path('tab/',views.tab,name="tab"),
     path('standard-posts/subscription-posts/',views.subscription_posts,name="subscription-posts"),
     path('favorite/<int:id>/',views.article_favorite,name="article-favorite"),
-    path('favorite/<int:id>/',views.article_favorite,name="article-favorite")
+    path('del-favorite/<int:id>/',views.remove_favorite,name="remove-favorite"),
 ]

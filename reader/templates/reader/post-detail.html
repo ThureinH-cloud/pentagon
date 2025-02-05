@@ -3,7 +3,7 @@
 {% load daisyui_filters %}
 {% load crispy_forms_tags %}
   <div class="min-h-screen bg-base-200">
-    <div class="grid grid-cols-7 gap-5 ">
+    <div class="grid grid-cols-8 gap-5">
         <div class="col-start-2 col-span-4 mt-5">
             <div class="flex justify-between items-center">
                 <div class="flex">
@@ -27,11 +27,24 @@
                 </div>
                 
                 <div class="">
-                  
-                    <a href="{% url 'article-favorite' article.id %}" class="btn btn-secondary">
+                    
+                    {% if article_favorite %}
+                     <form action="{% url 'remove-favorite' article.id %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-error"> Remove From Your Favorites<i class="fa-solid fa-trash"></i>
+                      </button>
+                     </form>
+                     {% else %}
+                     <a href="{% url 'article-favorite' article.id %}" class="btn btn-secondary">
                       Add To Your Favorites
                       <i class="fa-solid fa-bookmark"></i>
                      </a>
+                    {% endif %}
+                      
+                   
+                     
+                    
+                      
                 </div>
             </div>
             <div class="divider divider-neutral"></div>
@@ -80,6 +93,22 @@
                       <input type="submit" class="btn btn-active" value="Submit">
                     </form>
                   </div>
+        </div>
+        <div class="col-start-6 col-span-2 mt-10 ml-10">
+
+          <div class="card bg-base-100 w-96 ">
+            <div class="card-body">
+              <h2 class=" text-xl">Your Favorites Posts</h2>
+
+             {% for favorite in user_favorites %}
+             <div class="flex">
+              - <a class="link ml-1" href="{% url 'post-detail' favorite.article.id %}">{{favorite.article}}</a>
+
+             </div>
+             {% endfor %}
+              
+            </div>
+          </div>
         </div>
       </div>
   </div>

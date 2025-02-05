@@ -15,7 +15,8 @@ class Subscription(models.Model):
     expires_at=models.DateField(blank=True, null=True,default=datetime.now()+timedelta(days=30))
     def remaining(self):
         if self.expires_at:
-            return self.expires_at-self.created_at
+            time_remaining=self.expires_at-datetime.now().date()
+            return time_remaining.days
         else:
             return None
     def __str__(self):
@@ -26,5 +27,7 @@ class Favorite(models.Model):
     article=models.ForeignKey(Article, on_delete=models.CASCADE,related_name="favorite")
     user=models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorite")
     created_at=models.DateTimeField(auto_now_add=True)
+    def get_article(self):
+        return self.article
     def __str__(self):
         return self.user.username +"-" + self.article.title

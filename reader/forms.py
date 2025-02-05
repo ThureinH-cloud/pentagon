@@ -11,3 +11,4 @@ class StarRatingWidget(forms.widgets.RadioSelect):
                 f' <div class="rating rating-md"><input type="radio" name="{name}" class="mask mask-star-2 bg-orange-400" value="{i}" id="{name}-{i}" {checked} /></div>'
             )
         return format_html(''.join(html))
+

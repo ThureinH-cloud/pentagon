@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-2#t-+d7rd(u#*2by^=!kw0-84=$%*1kn&%ars0w=jw!w4^9rdf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+# ALLOWED_HOSTS = ['*']
+# CSRF_TRUSTED_ORIGINS = ['*']
 
 # Application definition
 
@@ -44,10 +44,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_daisyui',
     'django_recaptcha',
-    'fontawesomefree'
-
-
-
+    'fontawesomefree',
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'daisyui'
 CRISPY_TEMPLATE_PACK = 'daisyui'
@@ -156,9 +153,9 @@ AUTO_LOGOUT = {
 SECURE_CROSS_ORIGIN_OPENER_POLICY="same-origin-allow-popups"
 
 
-AWS_ACCESS_KEY_ID='AKIAR7HWXZV2URWT6D5Y'
+AWS_ACCESS_KEY_ID='AKIAX5EDBOPT2ICC43BM'
 
-AWS_SECRET_ACCESS_KEY='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'
+AWS_SECRET_ACCESS_KEY='WnL8+7QuNEoBS1Iu+ltdzsls7sqqh6OP+4GcPtfA'
 
 EMAIL_BACKEND = "django_ses.SESBackend"
 
@@ -169,13 +166,13 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 AWS_SES_REGION_NAME = "ap-southeast-2"
 AWS_SES_REGION_ENDPOINT = "email.ap-southeast-2.amazonaws.com"
 DEFAULT_FROM_EMAIL = 'dbodbo086@gmail.com'
-SITE_URL='http://127.0.0.1:8000'
-
+SITE_URL='http://pentagon-dev.ap-southeast-2.elasticbeanstalk.com/'
 CELERY_BEAT_SCHEDULE = {
     'delete_expired_subscriptions': {
         'task': 'reader.tasks.delete_expired_subscriptions',
         'schedule': 60, 
     },
+    
 }
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True 
 CELERY_BROKER_TRANSPORT_OPTIONS = {
@@ -184,6 +181,7 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
     'interval_step': 2,  
     'interval_max': 30,  
 }
+
 
 CELERY_TASK_TIME_LIMIT = 10
 CELERY_ACKS_LATE = True  

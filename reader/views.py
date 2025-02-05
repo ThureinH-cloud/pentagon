@@ -9,13 +9,19 @@ from .paypal import get_access_token,cancel_subscription,update_subscription_pla
 from django.db.models import Avg,Count
 from writer.forms import ArticleReviewForm
 from django.http import HttpResponse
+# from .forms import SearchForm
+
 # Create your views here.
 @login_required(login_url="sign-in")
 def client_home(request):
+    query=request.GET.get("search","")
+    print(query)
+    
     account_status=AccountStatus.objects.get(user_id=request.user.id)
     accounts=AccountStatus.objects.all()
     articles=Article.objects.all()
     categories=Article.objects.values('category').distinct()
+    
     context={
         "articles":articles,
         'account_status':account_status,
@@ -27,6 +33,10 @@ def client_home(request):
 @login_required(login_url="sign-in")
 def article_detail(request,id):
     article=Article.objects.get(id=id)
+    try:
+        article_favorite=Favorite.objects.get(article=article,user=request.user)
+    except:
+        article_favorite=None
     if article.is_premium is True:
         try:
             Subscription.objects.get(user=request.user, is_active=True,subscription_plan='Premium')
@@ -42,9 +52,9 @@ def article_detail(request,id):
     else:
         pass
     article_reviews=ArticleReview.objects.filter(article=article)
-    article_reviewer=ArticleReview.objects.filter(user=request.user,article=article)
     
     article_review=ArticleReviewForm(request.POST or None)
+    user_favorites=Favorite.objects.filter(user=request.user)
     
     if article_review.is_valid():
         new_review=article_review.save(commit=False)
@@ -66,7 +76,9 @@ def article_detail(request,id):
         'reading_time': article.reading_time(),
         'account_status':account_status,
         'article_review':article_review,
-        'article_reviews':article_reviews
+        'article_reviews':article_reviews,
+        'user_favorites':user_favorites,
+        'article_favorite':article_favorite
     }
     return render(request, "reader/post-detail.html", context)
 
@@ -89,7 +101,7 @@ def standard_posts(request):
 def subscription_posts(request):
     param=request.GET.get("select")
     try:
-        sub_user=Subscription.objects.get(user=request.user,is_active=True)
+        Subscription.objects.get(user=request.user,is_active=True)
     except Subscription.DoesNotExist:
         return redirect("subscription-locked")
     if "Latest" in param:
@@ -100,6 +112,7 @@ def subscription_posts(request):
         articles=Article.objects.filter(is_standard=True).annotate(favorite_count=Count('favorite__article')).order_by("-favorite_count")
     context={
         "articles":articles,
+        "param":param
     }
     return render(request, "reader/subscription-posts-filter.html", context)
 
@@ -110,7 +123,7 @@ def premium_posts(request):
     except Subscription.DoesNotExist:
         return redirect("subscription-locked")
     if sub_user.subscription_plan == "Premium":
-        articles=Article.objects.filter(is_premium=True,is_standard=True)
+        articles=Article.objects.filter(is_premium=True)
         context={
             "articles":articles,
         }
@@ -132,6 +145,7 @@ def search(request):
 def subscription_success(request):
     return render(request, "reader/subscription-success.html")
 
+@login_required(login_url="sign-in")
 def category(request,category):
     category_articles=Article.objects.filter(category=category)
     context={
@@ -186,3 +200,11 @@ def article_favorite(request,id):
     if request.method == "GET":
         Favorite.objects.create(user=request.user, article=articleObj)
     return redirect("client-home")
+
+def remove_favorite(request, id):
+    article=Article.objects.get(id=id)
+    if request.method == "POST":
+        Favorite.objects.get(user=request.user, article=article).delete()
+    return redirect("client-home")
+
+

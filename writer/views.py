@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from .models import Article
@@ -9,6 +10,7 @@ def writer_dashboard(request):
     current_user=request.user.id
     try:
         articles=Article.objects.all().filter(author_id=current_user).order_by("-posted_at")
+        
     except Article.DoesNotExist:
         articles="None"
     context={
@@ -88,8 +90,11 @@ def delete_article(request, id):
     return redirect("writer-dashboard")
 
 def create_collection(request):
-    article_collection_form=ArticleCollectionForm(instance=request.user.author)
+    article_collection_form=ArticleCollectionForm(instance=request.user)
     context={
         "form":article_collection_form
     }
     return render(request, "writer/create-collection.html",context)
+
+def writer_ranks(request):
+    return render(request, "writer/writer-ranks.html")
