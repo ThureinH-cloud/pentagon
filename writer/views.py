@@ -49,6 +49,21 @@ def create_standard_article(request):
     }
     return render(request, "writer/create-standard-article.html", context)
 
+@login_required(login_url="sign-in")
+def create_premium_article(request):
+    form=PremiumArticleForm(request.POST or None)
+    if request.method == "POST":
+        form=PremiumArticleForm(request.POST, request.FILES)
+        if form.is_valid():
+            article=form.save(commit=False)
+            article.author=request.user
+            article.save()
+            return redirect("writer-dashboard")
+    context={
+        "form":form
+    }
+    return render(request, "writer/create-premium-article.html", context)
+
 def update_article(request,id):
     try:
         user=request.user.id

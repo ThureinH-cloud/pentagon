@@ -14,7 +14,7 @@
                             <option>Highest Rated</option>
                             <option>Most Favorite</option>
                           </select>
-                          <button id="applyFilterBtn" class="btn btn-active ml-2">Apply</button>
+                          <button id="applyFilterBtn" class="btn btn-active ml-2">Filter <i class="fa-solid fa-filter"></i></button>
                         </div>
                        </div>
                         {% for article in articles %}
@@ -28,7 +28,7 @@
                   </figure>
                 <div class="card-body">
                   <div class="flex">
-                    <p>{{article.posted_at}}</p>
+                    <p>{{article.posted_at|date:'Y-m-d'}}</p>
                     <div class="badge badge-warning badge-outline p-3">{{article.category}}</div>
 
                   </div>
@@ -57,7 +57,6 @@
                         Premium
                         {% elif article.is_standard %}
                         <i class="fa-solid fa-lock"></i>
-
                         Standard
                         {% else %}
                         <i class="fa-solid fa-lock-open"></i>
@@ -184,6 +183,16 @@
                     </div>
                 </div>
                 
+                
+                  <div class="join ml-48 mb-12 shadow-xl">
+                    <button class="join-item btn">«</button>
+                    <button class="join-item btn">1</button>
+                    <button class="join-item btn btn-active">2</button>
+                    <button class="join-item btn">3</button>
+                    <button class="join-item btn">4</button>
+                    <button class="join-item btn">»</button>
+  
+                  </div>
             </div>
             <div class="col-start-6 col-span-2 mt-20">
                 <div class="flex-row">
@@ -252,7 +261,6 @@
                               <div class="card-body">
                                  {% for category in categories %}
                                  <div class="flex-row flex items-center">
-                                 
                                        <h2 class="mx-4 text-lg">- <a href="{% url 'category' category.category  %}" class="link">{{category.category}}</a></h2> 
                                  </div>
                                  {% endfor %}
@@ -265,8 +273,9 @@
                 </div>
                 </div>
             </div>
+            
     </div>
-    <div class="absolute bg-transparent bottom-2 right-96  h-16 w-16">
+    <!-- <div class="absolute bg-transparent bottom-2 right-96  h-16 w-16">
       <div class="fixed bottom-1  p-6 rounded-lg">
         <div class="card  bg-base-100 w-96 shadow-xl">
           <div class="card-body">
@@ -282,8 +291,8 @@
         </div>
      
       </div>
-    </div>
-
+    </div> -->
+   
     <script>
       document.getElementById('applyFilterBtn').addEventListener('click', function() {
         var selectedValue = document.getElementById('postFilter').value;

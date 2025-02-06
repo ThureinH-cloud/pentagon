@@ -43,7 +43,7 @@
                   <ul class="menu">
                     <li><a href="{% url 'create-article' %}">Free</a></li>
                     <li> <a href="{% url 'create-standard-article' %}">Standard</a></li>   
-                    <li><a href="">Premium</a></li>
+                    <li><a href="{% url 'create-premium-article' %}">Premium</a></li>
                   </ul>
                 </div>
               </div>
@@ -76,14 +76,14 @@
                       <p>{{article.content|truncatewords:20}}</p>
                       <div class="badge badge-info badge-outline">{{article.category}}</div>
 
-                      {{article.posted_at}}
+                      {{article.posted_at|date:"Y-m-d"}}
                       <br>
                       {% if article.is_premium %}
                         Premium
                         {% elif article.is_standard %}
-                        Standard
+                        <div class="flex items-center"> <i class="fa-solid fa-lock-open mr-1"></i>Standard</div>
                         {% else %}
-                        Free
+                        <div class="flex items-center"> <i class="fa-solid fa-lock-open mr-1"></i>Free</div>
                       {% endif %}
                         
                       <div class="gap-4 grid">

@@ -6,6 +6,7 @@ urlpatterns = [
     path('update-article/<int:id>/', views.update_article, name="update-article"),
     path('delete-article/<int:id>/', views.delete_article, name="delete-article"),
     path('create-standard-article/',views.create_standard_article,name="create-standard-article"),
+    path('create-premium-article/', views.create_premium_article, name="create-premium-article"),
     path('create-collection/',views.create_collection,name="create-collection"),
     path('ranks',views.writer_ranks,name="writer-ranks"),
     # path('update-collection/<int:id>/',views.update_collection,name="update-collection"),

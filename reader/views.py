@@ -9,16 +9,19 @@ from .paypal import get_access_token,cancel_subscription,update_subscription_pla
 from django.db.models import Avg,Count
 from writer.forms import ArticleReviewForm
 from django.http import HttpResponse
-# from .forms import SearchForm
 
 # Create your views here.
 @login_required(login_url="sign-in")
 def client_home(request):
     query=request.GET.get("search","")
-    print(query)
-    
+    if query:
+        articles=Article.objects.filter(title__icontains=query)
+        context={
+            "results":articles
+        }
+        return render(request,"reader/search_results.html",context)
     account_status=AccountStatus.objects.get(user_id=request.user.id)
-    accounts=AccountStatus.objects.all()
+    accounts=AccountStatus.objects.exclude(user__username="admin")
     articles=Article.objects.all()
     categories=Article.objects.values('category').distinct()
     
@@ -52,7 +55,6 @@ def article_detail(request,id):
     else:
         pass
     article_reviews=ArticleReview.objects.filter(article=article)
-    
     article_review=ArticleReviewForm(request.POST or None)
     user_favorites=Favorite.objects.filter(user=request.user)
     
@@ -90,8 +92,13 @@ def standard_posts(request):
         return redirect("subscription-locked")
     if sub_user.subscription_plan == 'Premium' or 'Standard':
         articles=Article.objects.filter(is_standard=True)
+        article_standard_authors=Article.objects.filter(is_standard=True).values('author').distinct()
+        article_authors=User.objects.filter(id__in=article_standard_authors)
+        accounts=AccountStatus.objects.filter(user__in=article_authors)
         context={
             "articles":articles,
+            "accounts":accounts
+            
         }
         return render(request, "reader/standard-posts.html", context)
     else:
@@ -149,7 +156,8 @@ def subscription_success(request):
 def category(request,category):
     category_articles=Article.objects.filter(category=category)
     context={
-        "category_articles":category_articles
+        "category_articles":category_articles,
+        "category":category
     }
     return render(request, "reader/category_articles.html", context)
 
