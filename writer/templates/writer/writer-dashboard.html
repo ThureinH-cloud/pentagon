@@ -5,9 +5,7 @@
       <a class="btn btn-ghost text-xl">Pentagon</a>
     </div>
     <div class="flex-none gap-2">
-      <div class="form-control">
-        <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto" />
-      </div>
+     
       <div class="dropdown dropdown-end">
         <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
           <div class="w-10 rounded-full">
@@ -81,7 +79,7 @@
                       {% if article.is_premium %}
                         Premium
                         {% elif article.is_standard %}
-                        <div class="flex items-center"> <i class="fa-solid fa-lock-open mr-1"></i>Standard</div>
+                        <div class="flex items-center"><i class="fa-solid fa-lock mr-1"></i>Standard</div>
                         {% else %}
                         <div class="flex items-center"> <i class="fa-solid fa-lock-open mr-1"></i>Free</div>
                       {% endif %}
