@@ -5,16 +5,14 @@ from account.models import AccountStatus
 from writer.models import Article,ArticleReview
 from django.contrib.auth.models import User
 from .paypal import get_access_token,cancel_subscription,update_subscription_plan
-from django.db.models import Avg,Count,Sum
+from django.db.models import Avg,Count
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 
 # Create your views here.
 @login_required(login_url="sign-in")
 def client_home(request):
-    
     query=request.GET.get("search","")
-    
     if query:
         articles=Article.objects.filter(title__icontains=query)
         context={
@@ -28,7 +26,6 @@ def client_home(request):
     account_status=AccountStatus.objects.get(user_id=request.user.id)
     accounts=AccountStatus.objects.exclude(user__username="admin")
     categories=Article.objects.values('category').distinct()
-    
     context={
         'account_status':account_status,
         'accounts':accounts,
@@ -41,35 +38,38 @@ def client_home(request):
 @login_required(login_url="sign-in")
 def article_detail(request,id):
     article=Article.objects.get(id=id)
+    account_status=AccountStatus.objects.get(user=request.user)
     try:
         article_favorite=Favorite.objects.get(article=article,user=request.user)
     except:
         article_favorite=None
+    
     if article.is_premium is True:
-        try:
-            Subscription.objects.get(user=request.user, is_active=True,subscription_plan='Premium')
-        except Subscription.DoesNotExist:
-            return redirect("subscription-locked")
+        if article.author != request.user and account_status.rank is not "Platinum":
+            try:
+                Subscription.objects.get(user=request.user, is_active=True, subscription_plan='Premium')
+            except Subscription.DoesNotExist:
+                if account_status.rank == "Gold" and article.author == request.user:
+                    pass
+                return redirect("subscription-locked")          
     elif article.is_standard is True:
-        try:
-           sub=Subscription.objects.get(user=request.user, is_active=True)
-           if sub.subscription_plan == 'Standard' or 'Premium':
-               pass
-        except Subscription.DoesNotExist:
-            return redirect("subscription-locked")
+        if article.author != request.user and account_status.rank is not "Gold":
+            try:
+                sub=Subscription.objects.get(user=request.user, is_active=True)
+                if sub.subscription_plan == 'Standard' or 'Premium':
+                    pass
+            except Subscription.DoesNotExist:
+                return redirect("subscription-locked")
     else:
         pass
     article_reviews=ArticleReview.objects.filter(article=article)
     user_favorites=Favorite.objects.filter(user=request.user)
     
-    
     if not request.session.get(f'viewed_post_{id}', False):
         article.view_count += 1
         article.save()
-        
         request.session[f'viewed_post_{id}'] = True
     article_author=article.author
-    account_status=AccountStatus.objects.get(user_id=request.user.id)
 
     context={
         "article":article,
@@ -96,7 +96,6 @@ def standard_posts(request):
         context={
             "articles":articles,
             "accounts":accounts
-            
         }
         return render(request, "reader/standard-posts.html", context)
     else:

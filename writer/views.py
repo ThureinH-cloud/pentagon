@@ -69,39 +69,62 @@ def create_premium_article(request):
     }
     return render(request, "writer/create-premium-article.html", context)
 
+@login_required(login_url="sign-in")
 def update_article(request,id):
+    categories=Article.CATEGORY_CHOICES
     try:
-        user=request.user.id
-        article=Article.objects.get(id=id, author_id=user)
+        user=request.user
+        article=Article.objects.get(id=id, author=user)
     except Article.DoesNotExist:
         return redirect("writer-dashboard")
-    form=None
-    if article.is_standard is True:
-        form=StandardArticleForm(request.POST or None, instance=article)
-        if request.method=='POST':
-            form=StandardArticleForm(request.POST,request.FILES, instance=article)
-            if form.is_valid():
-                form.save()
-                return redirect("writer-dashboard") 
-    elif article.is_premium is True:
-        form=PremiumArticleForm(request.POST or None, instance=article)
-        if request.method=='POST':
-            form=PremiumArticleForm(request.POST,request.FILES, instance=article)
-            if form.is_valid():
-                form.save()
-                return redirect("writer-dashboard") 
-    else:
-        form=ArticleForm(request.POST or None, instance=article)
-        if request.method=='POST':
-            form=ArticleForm(request.POST,request.FILES, instance=article)
-            if form.is_valid():
-                form.save()
-                return redirect("writer-dashboard") 
+    if request.method == "POST":
+        article.author=user
+        article.title=request.POST.get("title")
+        article.content=request.POST.get("content")
+        article.category=request.POST.get("category")
+        
+        if request.POST.get("is_premium") is not None:
+            article.is_premium=request.POST.get("is_premium")
+        elif request.POST.get("is_standard") is not None:
+            article.is_standard=request.POST.get("is_standard")
+        else:
+            article.is_premium=False
+            article.is_standard=False
+            article.save()
+        if request.FILES.get("photo") is not None:
+            article.photo=request.FILES.get("photo")
+        article.save()
+        return redirect("writer-dashboard")
+    # if article.is_standard is True:
+    #     form=StandardArticleForm(request.POST or None, instance=article)
+    #     if request.method=='POST':
+    #         form=StandardArticleForm(request.POST,request.FILES, instance=article)
+    #         if form.is_valid():
+    #             form.save()
+    #             return redirect("writer-dashboard") 
+    # elif article.is_premium is True:
+    #     form=PremiumArticleForm(request.POST or None, instance=article)
+    #     if request.method=='POST':
+    #         form=PremiumArticleForm(request.POST,request.FILES, instance=article)
+    #         if form.is_valid():
+    #             form.save()
+    #             return redirect("writer-dashboard") 
+    # else:
+    #     form=ArticleForm(request.POST or None, instance=article)
+    #     if request.method=='POST':
+    #         form=ArticleForm(request.POST,request.FILES, instance=article)
+    #         if form.is_valid():
+    #             form.save()
+    #             return redirect("writer-dashboard") 
        
+    # context={
+    #     "form":form
+    # }
     context={
-        "form":form
+        "article":article,
+        "categories":categories
     }
-    return render(request, "writer/update-article.html", context)
+    return render(request, "writer/update-article.html",context)
 
 def delete_article(request, id):
     

@@ -77,7 +77,10 @@
                       {{article.posted_at|date:"Y-m-d"}}
                       <br>
                       {% if article.is_premium %}
-                        Premium
+                        <div class="flex items-center">
+                          <i class="fa-solid fa-crown text-warning mr-1 "></i>
+                          Premium
+                        </div>
                         {% elif article.is_standard %}
                         <div class="flex items-center"><i class="fa-solid fa-lock mr-1"></i>Standard</div>
                         {% else %}
