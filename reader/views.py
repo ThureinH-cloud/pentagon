@@ -4,35 +4,40 @@ from .models import Subscription,Favorite
 from account.models import AccountStatus
 from writer.models import Article,ArticleReview
 from django.contrib.auth.models import User
-from writer.forms import ArticleReviewForm
 from .paypal import get_access_token,cancel_subscription,update_subscription_plan
 from django.db.models import Avg,Count
-from writer.forms import ArticleReviewForm
 from django.http import HttpResponse
+from django.core.paginator import Paginator
 
 # Create your views here.
 @login_required(login_url="sign-in")
 def client_home(request):
     query=request.GET.get("search","")
+    
     if query:
         articles=Article.objects.filter(title__icontains=query)
         context={
             "results":articles
         }
         return render(request,"reader/search_results.html",context)
+    articles=Article.objects.all()
+    paginator=Paginator(articles,2)
+    page_number=request.GET.get("page")
+    page_object=paginator.get_page(page_number)
     account_status=AccountStatus.objects.get(user_id=request.user.id)
     accounts=AccountStatus.objects.exclude(user__username="admin")
     articles=Article.objects.all()
     categories=Article.objects.values('category').distinct()
     
     context={
-        "articles":articles,
         'account_status':account_status,
         'accounts':accounts,
-        'categories':categories
+        'categories':categories,
+        "page_objects":page_object
     }
     return render(request, "reader/home.html",context)
 
+    
 @login_required(login_url="sign-in")
 def article_detail(request,id):
     article=Article.objects.get(id=id)
@@ -55,15 +60,9 @@ def article_detail(request,id):
     else:
         pass
     article_reviews=ArticleReview.objects.filter(article=article)
-    article_review=ArticleReviewForm(request.POST or None)
     user_favorites=Favorite.objects.filter(user=request.user)
     
-    if article_review.is_valid():
-        new_review=article_review.save(commit=False)
-        new_review.article=article
-        new_review.user=request.user
-        new_review.save()
-        return redirect('client-home')
+    
     if not request.session.get(f'viewed_post_{id}', False):
         article.view_count += 1
         article.save()
@@ -77,7 +76,6 @@ def article_detail(request,id):
         'article_author':article_author,
         'reading_time': article.reading_time(),
         'account_status':account_status,
-        'article_review':article_review,
         'article_reviews':article_reviews,
         'user_favorites':user_favorites,
         'article_favorite':article_favorite
@@ -205,7 +203,7 @@ def tab(request):
 @login_required(login_url="sign-in")
 def article_favorite(request,id):
     articleObj=Article.objects.get(id=id)
-    if request.method == "GET":
+    if request.method == "POST":
         Favorite.objects.create(user=request.user, article=articleObj)
     return redirect("client-home")
 

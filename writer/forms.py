@@ -1,7 +1,6 @@
 from django.forms import ModelForm
-from .models import Article,ArticleReview,ArticleCollection
+from .models import Article,ArticleCollection
 from django import forms
-from reader.forms import StarRatingWidget
 class ArticleForm(forms.ModelForm):
     class Meta:
         model = Article
@@ -17,12 +16,12 @@ class PremiumArticleForm(ModelForm):
         model=Article
         fields=['title','content','photo','category','is_premium']
 
-class ArticleReviewForm(ModelForm):
-    class Meta:
-        model = ArticleReview
-        fields=['rating','comment']
+# class ArticleReviewForm(ModelForm):
+#     class Meta:
+#         model = ArticleReview
+#         fields=['rating','comment']
         
-    rating = forms.ChoiceField(choices=[(i, i) for i in range(1, 6)], widget=StarRatingWidget())
+#     rating = forms.ChoiceField(choices=[(i, i) for i in range(1, 6)],widget=StarRatingWidget)
 
 class ArticleCollectionForm(ModelForm):
     class Meta:

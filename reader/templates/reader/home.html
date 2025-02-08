@@ -17,10 +17,11 @@
                           <button id="applyFilterBtn" class="btn btn-active ml-2">Filter <i class="fa-solid fa-filter"></i></button>
                         </div>
                        </div>
-                        {% for article in articles %}
+                        {% for article in page_objects %}
               <div class="card card-side bg-base-100 shadow-xl my-4">
                 <figure class="w-11/12 h-5/6">
                     <img
+                      class="object-cover"
                       style="min-height:300px;"
                       src="{{article.photo.url}}"
                       
@@ -185,12 +186,21 @@
                 
                 
                   <div class="join ml-48 mb-12 shadow-xl">
-                    <button class="join-item btn">«</button>
-                    <button class="join-item btn">1</button>
-                    <button class="join-item btn btn-active">2</button>
-                    <button class="join-item btn">3</button>
-                    <button class="join-item btn">4</button>
-                    <button class="join-item btn">»</button>
+                    
+                    {% if page_objects.has_previous %}
+                    <a href="?page={{page_objects.previous_page_number}}" class="join-item btn">«</a>
+
+                    {% endif %}
+                      
+                    <button class="join-item btn">{{page_objects.number}}</button>
+                    {% if page_objects.has_next %}
+                    <a href="?page={{page_objects.next_page_number}}" class="join-item btn">»</a>
+
+                    {% endif %}
+                      
+                    <!-- <button class="join-item btn"></button>
+                    
+                    <button class="join-item btn"></button> -->
   
                   </div>
             </div>

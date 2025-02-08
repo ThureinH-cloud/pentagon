@@ -35,10 +35,14 @@
                       </button>
                      </form>
                      {% else %}
-                     <a href="{% url 'article-favorite' article.id %}" class="btn btn-secondary">
-                      Add To Your Favorites
-                      <i class="fa-solid fa-bookmark"></i>
-                     </a>
+                     
+                     <form action="{% url 'article-favorite' article.id %}" method="post">
+                      {% csrf_token %}
+                      <button class="btn btn-secondary">
+                        Add To Your Favorites
+                        <i class="fa-solid fa-bookmark"></i>
+                        </button>
+                     </form>
                     {% endif %}
                       
                    
@@ -58,7 +62,7 @@
                 <div class="divider divider-neutral"></div>
                
                   <h2 class="text-xl text-balance font-semibold">Title : {{article.title}}</h2>
-                  <p class="antialiased tracking-wide	leading-relaxed                  ">{{article.content}}</p>
+                  <p class="antialiased tracking-wide	leading-relaxed">{{article.content}}</p>
                   
                   <div class="divider divider-neutral"></div>
                  
@@ -89,27 +93,45 @@
                     <form action="" method="post">
                       {% csrf_token %}
                       
-                      {{article_review|crispy}}
+                      {% for i in  %}
+                        {{i}}
+                      {% endfor %}
+                        
                       <input type="submit" class="btn btn-active" value="Submit">
                     </form>
                   </div>
         </div>
-        <div class="col-start-6 col-span-2 mt-10 ml-10">
-
-          <div class="card bg-base-100 w-96 ">
-            <div class="card-body">
-              <h2 class=" text-xl">Your Favorites Posts</h2>
-
-             {% for favorite in user_favorites %}
-             <div class="flex">
-              - <a class="link ml-1" href="{% url 'post-detail' favorite.article.id %}">{{favorite.article}}</a>
-
-             </div>
-             {% endfor %}
+        <div class="col-start-6 col-span-2">
+          <div class="flex-row">
+            
+            <div class="card">
               
-            </div>
+              <div class="card-body">
+                  Your Favorite Posts
+                  <div class="card bg-base-100 w-96 shadow-xl">
+                      <div class="card-body">
+                        {% if user_favorites  %}
+
+                         {% for favorite in user_favorites %}
+                         
+                         
+                          
+                         <div class="flex-row flex items-center">
+                         
+                               <h2 class="mx-4">- <a href="" class="link">{{favorite.article}}</a></h2> 
+                         </div>
+                         {% endfor %}
+                         {% else %}
+                         <p class="text-center">No Favorite here.</p>
+                         {% endif %}
+                        
+                      </div>
+                    </div>
+                </div>
+              </div>
+            
           </div>
-        </div>
+          </div>
       </div>
   </div>
 {% endblock  %}
