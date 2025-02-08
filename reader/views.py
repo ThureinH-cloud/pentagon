@@ -153,9 +153,14 @@ def subscription_success(request):
 @login_required(login_url="sign-in")
 def category(request,category):
     category_articles=Article.objects.filter(category=category)
+    categories=Article.objects.values("category").distinct()
+    authors=Article.objects.filter(category=category).values("author").distinct()
+    accounts=AccountStatus.objects.filter(user__in=authors)
     context={
         "category_articles":category_articles,
-        "category":category
+        "category":category,
+        "categories":categories,
+        "accounts":accounts
     }
     return render(request, "reader/category_articles.html", context)
 
@@ -213,4 +218,13 @@ def remove_favorite(request, id):
         Favorite.objects.get(user=request.user, article=article).delete()
     return redirect("client-home")
 
+@login_required(login_url="sign-in")
+def article_review(request,id):
+    if request.method == "POST":
+        article=Article.objects.get(id=id)
+        comment=request.POST.get("comment")
+        rating=request.POST.get("rating")
+        
+        ArticleReview.objects.create(user=request.user, article=article, comment=comment, rating=rating) 
+        return redirect("client-home")       
 

@@ -42,7 +42,12 @@
                   <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{form|crispy}}
-                    <input type="submit" value="Sign In" class="btn w-full">
+                    <div class="">
+                      <button type="submit" value="Sign In" class="btn w-full">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        Sign In
+                      </button>
+                    </div>
                     <div class="divider">OR</div>
                     <div class="flex justify-center">
                       <a href="{% url 'reset_password' %}" class="link">Forget Password?</a>

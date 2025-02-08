@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
     <title>
         {% block title %}
             Pentagon
@@ -19,12 +21,7 @@
     
     {% endblock  %}
     {{ redirect_to_login_immediately }}
-    {% block email %}
-    <div class="join">
-        <input class="input input-bordered join-item" placeholder="Email" />
-        <button class="btn join-item rounded-r-full">Subscribe</button>
-    </div>
-    {% endblock  %}
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{% static 'js/loading.js' %}"></script>
 </body>

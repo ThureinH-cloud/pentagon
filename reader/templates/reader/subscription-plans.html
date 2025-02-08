@@ -102,20 +102,18 @@
                             <span class="text-5xl">$9.99</span>
                             <span>/month</span>
                             <div class="divider"></div>
-                            <p class="">Elevate your experience with premium here:</p>
-                            <p class="mt-2">(Full article access)</p>
+                            <p class="">Elevate your experience with premium here.</p>
+                            <div class="mt-2 flex items-center justify-center"><svg class="shrink-0 w-4 h-4 text-blue-700 dark:text-blue-500 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+                              </svg>Full article access</div>
                             <div class="divider"></div>
                             <button class="btn" onclick="my_modal_4.showModal()">Get Started</button>
                         <script>
                           function urlsafeBase64Encode(input) {
-                            // First, create a Base64 encoded string using btoa
                             let base64 = btoa(input);
-                          
-                            // Replace `+` with `-`, `/` with `_`, and remove any trailing `=`
                             base64 = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-                          
                             return base64;
-                          }// Renders the PayPal button
+                          }
                         paypal.Buttons({
                             style: {
                                 shape: 'pill',
