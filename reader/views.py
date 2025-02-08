@@ -5,13 +5,14 @@ from account.models import AccountStatus
 from writer.models import Article,ArticleReview
 from django.contrib.auth.models import User
 from .paypal import get_access_token,cancel_subscription,update_subscription_plan
-from django.db.models import Avg,Count
+from django.db.models import Avg,Count,Sum
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 
 # Create your views here.
 @login_required(login_url="sign-in")
 def client_home(request):
+    
     query=request.GET.get("search","")
     
     if query:
@@ -26,7 +27,6 @@ def client_home(request):
     page_object=paginator.get_page(page_number)
     account_status=AccountStatus.objects.get(user_id=request.user.id)
     accounts=AccountStatus.objects.exclude(user__username="admin")
-    articles=Article.objects.all()
     categories=Article.objects.values('category').distinct()
     
     context={

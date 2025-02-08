@@ -2,51 +2,56 @@ from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from .models import Article
-from .forms import ArticleForm,StandardArticleForm,PremiumArticleForm,ArticleCollectionForm
-
+from .forms import StandardArticleForm,PremiumArticleForm,ArticleCollectionForm
+from account.models import AccountStatus
 # Create your views here.
 @login_required(login_url="sign-in")
 def writer_dashboard(request):
-    current_user=request.user.id
+    current_user=request.user
+    user_rank=AccountStatus.objects.get(user=current_user)
     try:
-        articles=Article.objects.all().filter(author_id=current_user).order_by("-posted_at")
-        
+        articles=Article.objects.all().filter(author=current_user).order_by("-posted_at")
     except Article.DoesNotExist:
-        articles="None"
+        articles=None
     context={
-        "articles":articles
+        "articles":articles,
+        "user_rank":user_rank
     }
     return render(request, "writer/writer-dashboard.html", context)
 
 @login_required(login_url="sign-in")
 def create_article(request):
-    form=ArticleForm(request.POST or None)
+    categories=Article.CATEGORY_CHOICES
     if request.method == "POST":
-        form=ArticleForm(request.POST,request.FILES)
-        if form.is_valid():
-            article=form.save(commit=False)
-            article.author=request.user
-            article.save()
-            return redirect("writer-dashboard")
+        article_author=request.user
+        category=request.POST.get("category")
+        title=request.POST.get("title")
+        content=request.POST.get("content")
+        photo=request.FILES.get("photo")
+        Article.objects.create(author=article_author, category=category, title=title, content=content, photo=photo)
+        return redirect("writer-dashboard")
     context={
-        "form":form,
-        
+        "categories":categories
     }
     return render(request, "writer/create-article.html",context)
 
 @login_required(login_url="sign-in")
 def create_standard_article(request):
-    form=StandardArticleForm(request.POST or None)
-    if request.method == "POST":
-        form=StandardArticleForm(request.POST, request.FILES)
-        if form.is_valid():
-            article=form.save(commit=False)
-            article.author=request.user
-            article.save()
-            return redirect("writer-dashboard")
-    context={
-        "form":form
-    }
+    user_rank=AccountStatus.objects.get(user=request.user)
+    if user_rank.rank=="Gold":
+        form=StandardArticleForm(request.POST or None)
+        if request.method == "POST":
+            form=StandardArticleForm(request.POST, request.FILES)
+            if form.is_valid():
+                article=form.save(commit=False)
+                article.author=request.user
+                article.save()
+                return redirect("writer-dashboard")
+        context={
+            "form":form
+        }
+    else:
+        return redirect("writer-ranks")
     return render(request, "writer/create-standard-article.html", context)
 
 @login_required(login_url="sign-in")

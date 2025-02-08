@@ -39,9 +39,9 @@
                 <div
                   class="collapse-content">
                   <ul class="menu">
-                    <li><a href="{% url 'create-article' %}">Free</a></li>
-                    <li> <a href="{% url 'create-standard-article' %}">Standard</a></li>   
-                    <li><a href="{% url 'create-premium-article' %}">Premium</a></li>
+                    <li><a  href="{% url 'create-article' %}">Free</a></li>
+                    <li><a  href="{% url 'create-standard-article' %}">Standard<i class="fa-solid fa-lock mr-1"></i></a></li>   
+                    <li><a  href="{% url 'create-premium-article' %}">Premium<i class="fa-solid fa-lock mr-1"></i></a></li>
                   </ul>
                 </div>
               </div>
@@ -71,8 +71,8 @@
                     <div class="card-body">
                     
                       <h2 class="card-title">{{ article.title}}</h2>
-                      <p>{{article.content|truncatewords:20}}</p>
-                      <div class="badge badge-info badge-outline">{{article.category}}</div>
+                      <p>{{article.content|safe|truncatewords:20}}</p>
+                      <div class="badge badge-warning badge-outline">{{article.category}}</div>
 
                       {{article.posted_at|date:"Y-m-d"}}
                       <br>

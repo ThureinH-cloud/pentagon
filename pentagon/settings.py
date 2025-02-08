@@ -172,6 +172,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'reader.tasks.delete_expired_subscriptions',
         'schedule': 60, 
     },
+    'update_user_rank':{
+        "task": "writer.tasks.update_user_rank",
+        'schedule':30
+    }
     
 }
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True 
