@@ -5,6 +5,9 @@ from .models import Article
 from .forms import StandardArticleForm,PremiumArticleForm,ArticleCollectionForm
 from account.models import AccountStatus
 # Create your views here.
+def get_account_status(request):
+    account_status = AccountStatus.objects.get(user=request.user)
+    return account_status
 @login_required(login_url="sign-in")
 def writer_dashboard(request):
     current_user=request.user
@@ -15,7 +18,8 @@ def writer_dashboard(request):
         articles=None
     context={
         "articles":articles,
-        "user_rank":user_rank
+        "user_rank":user_rank,
+        "account_status":get_account_status(request)
     }
     return render(request, "writer/writer-dashboard.html", context)
 
@@ -140,4 +144,4 @@ def create_collection(request):
     return render(request, "writer/create-collection.html",context)
 
 def writer_ranks(request):
-    return render(request, "writer/writer-ranks.html")
+    return render(request, "writer/writer-ranks.html",{"account_status":get_account_status(request)})

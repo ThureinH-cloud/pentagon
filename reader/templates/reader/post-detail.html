@@ -31,7 +31,7 @@
                     {% if article_favorite %}
                      <form action="{% url 'remove-favorite' article.id %}" method="post">
                       {% csrf_token %}
-                      <button type="submit" class="btn btn-error"> Remove From Your Favorites<i class="fa-solid fa-trash"></i>
+                      <button type="submit" class="btn btn-error"> Remove Favorite<i class="fa-solid fa-trash"></i>
                       </button>
                      </form>
                      {% else %}
@@ -39,7 +39,7 @@
                      <form action="{% url 'article-favorite' article.id %}" method="post">
                       {% csrf_token %}
                       <button class="btn btn-secondary">
-                        Add To Your Favorites
+                        Add Favorite
                         <i class="fa-solid fa-bookmark"></i>
                         </button>
                      </form>
@@ -57,7 +57,7 @@
               </figure>        
                 <div class="divider divider-neutral"></div>
                
-                  <p class="antialiased tracking-wide	leading-relaxed">{{article.content}}</p>
+                  <p class="antialiased tracking-wide	leading-relaxed">{{article.content|safe}}</p>
                   
                   <div class="divider divider-neutral"></div>
                  

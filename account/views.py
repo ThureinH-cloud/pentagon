@@ -56,8 +56,8 @@ def dashboard(request):
 @login_required(login_url='sign-in')
 def profile(request):
     update_form=UpdateUserForm(request.POST or None, instance=request.user)
-    user_status=AccountStatus.objects.get(user=request.user)
-    user=User.objects.get(username=request.user.username)
+    account_status=AccountStatus.objects.get(user=request.user)
+    
     
     try:
         user_subscription=Subscription.objects.get(user_id=request.user.id)
@@ -65,7 +65,7 @@ def profile(request):
         user_subscription="None"
     context={
         "form":update_form,
-        "user_status":user_status,
+        "account_status":account_status,
         "user_subscription":user_subscription
     }
     return render(request, "writer/profile.html",context)

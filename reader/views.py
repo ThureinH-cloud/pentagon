@@ -11,6 +11,10 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator
 
 # Create your views here.
+
+def get_account_status(request):
+    account_status = AccountStatus.objects.get(user=request.user)
+    return account_status
 @login_required(login_url="sign-in")
 def client_home(request):
     query=request.GET.get("search","")
@@ -24,11 +28,10 @@ def client_home(request):
     paginator=Paginator(articles,2)
     page_number=request.GET.get("page")
     page_object=paginator.get_page(page_number)
-    account_status=AccountStatus.objects.get(user_id=request.user.id)
     accounts=AccountStatus.objects.exclude(user__username="admin")
     categories=Article.objects.values('category').distinct()
     context={
-        'account_status':account_status,
+        'account_status':get_account_status(request),
         'accounts':accounts,
         'categories':categories,
         "page_objects":page_object
@@ -40,11 +43,12 @@ def client_home(request):
 def article_detail(request,id):
     article=Article.objects.get(id=id)
     account_status=AccountStatus.objects.get(user=request.user)
+    
     try:
         article_favorite=Favorite.objects.get(article=article,user=request.user)
     except:
         article_favorite=None
-    
+        
     if article.is_premium is True:
         if article.author != request.user and account_status.rank is not "Platinum":
             try:
@@ -70,11 +74,9 @@ def article_detail(request,id):
         article.view_count += 1
         article.save()
         request.session[f'viewed_post_{id}'] = True
-    article_author=article.author
 
     context={
         "article":article,
-        'article_author':article_author,
         'reading_time': article.reading_time(),
         'account_status':account_status,
         'article_reviews':article_reviews,
@@ -96,7 +98,8 @@ def standard_posts(request):
         accounts=AccountStatus.objects.filter(user__in=article_authors)
         context={
             "articles":articles,
-            "accounts":accounts
+            "accounts":accounts,
+            "account_status":get_account_status(request)
         }
         return render(request, "reader/standard-posts.html", context)
     else:
@@ -117,7 +120,8 @@ def subscription_posts(request):
         articles=Article.objects.filter(is_standard=True).annotate(favorite_count=Count('favorite__article')).order_by("-favorite_count")
     context={
         "articles":articles,
-        "param":param
+        "param":param,
+        "account_status":get_account_status(request)
     }
     return render(request, "reader/subscription-posts-filter.html", context)
 
@@ -131,16 +135,18 @@ def premium_posts(request):
         articles=Article.objects.filter(is_premium=True)
         context={
             "articles":articles,
+            "account_status":get_account_status(request)
         }
         return render(request, "reader/premium-posts.html", context)
     else:
         return redirect("subscription-locked")
 @login_required(login_url="sign-in")
 def subscription_locked(request):
-    return render(request, "reader/subscription-locked.html")
+    return render(request, "reader/subscription-locked.html",{"account_status":get_account_status(request)})
 
 @login_required(login_url='sign-in')
 def subscription_plans(request):
+    account_status=AccountStatus.objects.get(user=request.user)
     return render(request, "reader/subscription-plans.html")
 
 def search(request):
@@ -175,6 +181,8 @@ def delete_subscription(request,subId):
         if request.method == "POST":
             sub=Subscription.objects.get(subscriber_email=request.user.email,paypal_subscription_id=subId)
             sub.delete()
+        else:
+            return redirect("subscription-plans")
     except Subscription.DoesNotExist:
         messages.error(request,"Subscription doesn't exist")
         return redirect("subscription-plans")
@@ -222,7 +230,8 @@ def tab(request):
         articles=Article.objects.annotate(favorite_count=Count('favorite__article')).order_by("-favorite_count")
     context={
         "articles":articles,
-        "param":param
+        "param":param,
+        "account_status":get_account_status(request)
     }
     return render(request, "reader/select-tab.html",context)
 
