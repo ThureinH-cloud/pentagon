@@ -26,4 +26,9 @@ def update_user_rank():
             print("User reached Gold.")
         else:
             print("No users reached.")
-    
+
+@shared_task
+def clean_recent_articles():
+    users=User.objects.annotate(article_count=Count("recentarticle"))
+    for user in users:
+        print(user.article_count)

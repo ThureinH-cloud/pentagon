@@ -83,7 +83,12 @@ class ArticleCollection(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE, related_name="article_collection")
     article=models.ForeignKey(Article, on_delete=models.CASCADE, related_name="article_collection")
     created_at=models.DateTimeField(auto_now_add=True)
-
     def __str__(self):
         return self.article.title
     
+class RecentArticle(models.Model):
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
+    article=models.ForeignKey(Article, on_delete=models.CASCADE)
+    created_at=models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.user.username + " - " + self.article.title

@@ -35,7 +35,8 @@ def create_article(request):
         Article.objects.create(author=article_author, category=category, title=title, content=content, photo=photo)
         return redirect("writer-dashboard")
     context={
-        "categories":categories
+        "categories":categories,
+        "account_status":get_account_status(request)
     }
     return render(request, "writer/create-article.html",context)
 
@@ -143,5 +144,6 @@ def create_collection(request):
     }
     return render(request, "writer/create-collection.html",context)
 
+@login_required(login_url="sign-in")
 def writer_ranks(request):
     return render(request, "writer/writer-ranks.html",{"account_status":get_account_status(request)})

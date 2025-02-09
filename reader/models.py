@@ -24,8 +24,8 @@ class Subscription(models.Model):
     
 
 class Favorite(models.Model):
-    article=models.ForeignKey(Article, on_delete=models.CASCADE,related_name="favorite")
-    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorite")
+    article=models.ForeignKey(Article, on_delete=models.CASCADE)
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
     created_at=models.DateTimeField(auto_now_add=True)
     def get_article(self):
         return self.article

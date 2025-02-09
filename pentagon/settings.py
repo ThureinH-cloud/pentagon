@@ -175,6 +175,10 @@ CELERY_BEAT_SCHEDULE = {
     'update_user_rank':{
         "task": "writer.tasks.update_user_rank",
         'schedule':30
+    },
+    'clean_recent_articles':{
+        "task": "writer.tasks.clean_recent_articles",
+        'schedule':60
     }
     
 }

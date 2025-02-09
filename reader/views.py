@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Subscription,Favorite
 from account.models import AccountStatus
-from writer.models import Article,ArticleReview
+from writer.models import Article,ArticleReview,RecentArticle
 from django.contrib.auth.models import User
 from django.contrib import messages
 from .paypal import get_access_token,cancel_subscription, get_subscription_details,update_subscription_plan
@@ -26,6 +26,7 @@ def client_home(request):
         return render(request,"reader/search_results.html",context)
     articles=Article.objects.all()
     paginator=Paginator(articles,2)
+    recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
     page_number=request.GET.get("page")
     page_object=paginator.get_page(page_number)
     accounts=AccountStatus.objects.exclude(user__username="admin")
@@ -34,7 +35,8 @@ def client_home(request):
         'account_status':get_account_status(request),
         'accounts':accounts,
         'categories':categories,
-        "page_objects":page_object
+        "page_objects":page_object,
+        "recent_articles":recent_articles
     }
     return render(request, "reader/home.html",context)
 
@@ -43,7 +45,7 @@ def client_home(request):
 def article_detail(request,id):
     article=Article.objects.get(id=id)
     account_status=AccountStatus.objects.get(user=request.user)
-    
+    recent_article=RecentArticle.objects.update_or_create(article=article,user=request.user)
     try:
         article_favorite=Favorite.objects.get(article=article,user=request.user)
     except:
