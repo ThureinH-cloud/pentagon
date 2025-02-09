@@ -35,7 +35,7 @@
 
             </div>
             <h2 class="card-title font-bold">{{article.title}}</h2>
-            <p class="line-clamp-3">{{article.content|truncatewords:30}}</p>
+            <p class="line-clamp-3">{{article.content|safe|truncatewords:30}}</p>
             <div class="card-actions justify-between">
               <a href="{% url 'post-detail' article.id %}" class="btn btn-primary"> Read More<i class="fa-solid fa-circle-right"></i></a>
               <div>
@@ -167,7 +167,7 @@
                     
                 </div>  
                 <div class="">
-                  <p class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">{{article.get_rating}} out of 5</p>
+                  <p class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">{{article.get_rating|floatformat:1}} out of 5</p>
                   
                 </div>
               </div>

@@ -1,5 +1,13 @@
 {% extends 'reader/base.html' %}
-
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    {% block title %}
+    Locked - Pentagon
+    {% endblock  %}
+  </title>
+</head>
     {% block content %}
    
     <div class=" bg-base-200 min-h-screen">
@@ -14,7 +22,7 @@
                         <h3 class="uppercase">Subscription Locked</h3>
                     </div>
                     <p class="text-sm my-5">Please subscribe to browse through your articles!</p>
-                    <a href="{% url 'subscription-plans' %}" class="btn btn-active uppercase">Subscription Plans</a>
+                    <a href="{% url 'subscription-plans' %}" class="btn btn-active uppercase flex items-center"><i class="fa-solid fa-briefcase"></i>Subscription Plans </a>
                 </div>
               </div>
           </div>
