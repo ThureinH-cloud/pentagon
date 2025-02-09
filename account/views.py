@@ -94,7 +94,6 @@ def verify_email_success(request):
     return render(request, 'account/verify-email-success.html')
 
 def create_subscription(request):
-    
     email=request.user.email
     plan=request.GET.get("plan")
     token=request.GET.get("token")
@@ -110,15 +109,11 @@ def create_subscription(request):
         messages.error(request, "Subscription already exists or invalid data provided.")
         return redirect("subscription-plans")
     try:
-        
         Subscription.objects.create(subscriber_email=email,subscription_plan=selected_sub_plan,subscription_cost=sub_cost,paypal_subscription_id=subId,is_active=True,user=request.user)
     except IntegrityError:
         messages.error(request, "Subscription already exists or invalid data provided.")
         return redirect("subscription-plans")
-    try:
-        del request.session['visit']
-    except KeyError:
-        pass
+    
 
     context={
         "SubscriptionPlan":selected_sub_plan

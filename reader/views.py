@@ -4,7 +4,8 @@ from .models import Subscription,Favorite
 from account.models import AccountStatus
 from writer.models import Article,ArticleReview
 from django.contrib.auth.models import User
-from .paypal import get_access_token,cancel_subscription,update_subscription_plan
+from django.contrib import messages
+from .paypal import get_access_token,cancel_subscription, get_subscription_details,update_subscription_plan
 from django.db.models import Avg,Count
 from django.http import HttpResponse
 from django.core.paginator import Paginator
@@ -170,8 +171,11 @@ def author(request,author):
 def delete_subscription(request,subId):
     access_token=get_access_token()
     cancel_subscription(access_token,subId)
-    sub=Subscription.objects.get(subscriber_email=request.user.email,paypal_subscription_id=subId)
-    sub.delete()
+    try:
+        sub=Subscription.objects.get(subscriber_email=request.user.email,paypal_subscription_id=subId)
+        sub.delete()
+    except Subscription.DoesNotExist:
+        return redirect("subscription-plans")
     return render(request, "reader/delete-subscription.html")
 
 @login_required(login_url="sign-in")
@@ -185,8 +189,21 @@ def update_subscription(request,subId):
 
 @login_required(login_url='sign-in')
 def subscription_update_success(request):
-    
     return render(request, "reader/subscription-update-success.html")
+
+@login_required(login_url="sign-in")
+def confirm_update_subscription(request):
+    sub_details=Subscription.objects.get(user=request.user)
+    access_token = get_access_token()
+    result=get_subscription_details(access_token, sub_details.paypal_subscription_id)
+    if result['plan_id']=="P-2EA74263YC2500708M6KPIXI":
+        sub_details.subscription_plan="Premium"
+        sub_details.subscription_cost="9.99"
+        sub_details.save()
+        return redirect("subscription-success")
+    else:
+        messages.error(request, "Subscription already exists or invalid data provided.")
+        return redirect("subscription-plans")
 
 @login_required(login_url="sign-in")
 def tab(request):
@@ -204,12 +221,12 @@ def tab(request):
     }
     return render(request, "reader/select-tab.html",context)
 
-@login_required(login_url="sign-in")
 def article_favorite(request,id):
     articleObj=Article.objects.get(id=id)
     if request.method == "POST":
         Favorite.objects.create(user=request.user, article=articleObj)
     return redirect("client-home")
+
 
 def remove_favorite(request, id):
     article=Article.objects.get(id=id)

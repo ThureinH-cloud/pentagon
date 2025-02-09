@@ -69,32 +69,27 @@
                 <a href="{% url 'update-subscription' user_subscription.paypal_subscription_id %}" class="btn btn-accent">Change 
                 {% if user_subscription.subscription_plan == "Standard" %}
                   Premium
-                  {% else %}
-                  Standard
+                  
                 {% endif %}
                    Plan</a>
                 {% else %}
                 None
               {% endif %}
-                
             </div>
-            
             </div>
         </div>
       </div>
-      <div class="card m-3 card-side bg-base-200 shadow-xl">
+      <!-- <div class="card m-3 card-side bg-base-200 shadow-xl">
         <div class="card-body">
-            
             <div class="mx-3 my-2">
               <form action="" method="post">
                 {% csrf_token %}
                 {{form|crispy}}
                 <input type="submit" value="Update" class="btn btn-active">
               </form>
-                
             </div>
         </div>
-      </div>
+      </div> -->
     </div>
 </div>
 {% endblock  %}

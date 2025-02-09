@@ -18,5 +18,7 @@ urlpatterns = [
     path('standard-posts/subscription-posts/',views.subscription_posts,name="subscription-posts"),
     path('favorite/<int:id>/',views.article_favorite,name="article-favorite"),
     path('del-favorite/<int:id>/',views.remove_favorite,name="remove-favorite"),
-    path('article-review/<int:id>',views.article_review,name="article-review")
+    path('article-review/<int:id>',views.article_review,name="article-review"),
+    path('paypal-update-confirmed/',views.subscription_update_success,name="paypal-update"),
+    path('confirm-update-subscription/',views.confirm_update_subscription,name="confirm-update"),
 ]

@@ -1,4 +1,21 @@
 {% extends 'reader/base.html' %}
 {% block content %}
-  
+<div class=" bg-base-200 min-h-screen">
+    <div class="flex justify-center">
+      <div class="max-w-md">
+       
+        <div class="card my-4 bg-base-100 w-100 shadow-xl">
+            <div class="card-body">
+              <i class="fa-solid fa-lock text-center text-5xl"></i>
+
+                <div class="flex justify-center">
+                    <h3 class="uppercase">Subscription Updated</h3>
+                </div>
+                <p class="text-sm my-5">Your request to update your subscription has been confirmed on Paypal!</p>
+                <a href="{% url 'confirm-update' %}" class="btn btn-active uppercase flex items-center"><i class="fa-solid fa-briefcase"></i>Confirm Approval</a>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
 {% endblock  %}
