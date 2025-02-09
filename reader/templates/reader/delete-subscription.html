@@ -1,4 +1,7 @@
 {% extends 'reader/base.html' %}
+{% block title %}
+  Deactivate : Pentagon
+{% endblock  %}
 {% block content %}
 <div class=" bg-base-200 min-h-screen">
     <div class="flex justify-center">
@@ -6,10 +9,11 @@
        
         <div class="card my-4 bg-base-100 w-100 shadow-xl">
             <div class="card-body">
+              <i class="fa-solid fa-gear text-center text-5xl"></i>
                 <div class="flex justify-center">
                     <h3 class="uppercase">Subscription Deactivated</h3>
                 </div>
-                <p class="text-sm my-5">You are now free user.</p>
+                <p class="text-sm my-5">You no longer have access to features..</p>
                 <a href="{% url 'subscription-plans' %}" class="btn btn-active uppercase">Subscription Plans</a>
             </div>
           </div>

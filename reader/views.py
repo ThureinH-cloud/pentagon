@@ -172,9 +172,11 @@ def delete_subscription(request,subId):
     access_token=get_access_token()
     cancel_subscription(access_token,subId)
     try:
-        sub=Subscription.objects.get(subscriber_email=request.user.email,paypal_subscription_id=subId)
-        sub.delete()
+        if request.method == "POST":
+            sub=Subscription.objects.get(subscriber_email=request.user.email,paypal_subscription_id=subId)
+            sub.delete()
     except Subscription.DoesNotExist:
+        messages.error(request,"Subscription doesn't exist")
         return redirect("subscription-plans")
     return render(request, "reader/delete-subscription.html")
 
@@ -193,7 +195,10 @@ def subscription_update_success(request):
 
 @login_required(login_url="sign-in")
 def confirm_update_subscription(request):
-    sub_details=Subscription.objects.get(user=request.user)
+    try:
+        sub_details=Subscription.objects.get(user=request.user)
+    except Subscription.DoesNotExist:
+        return redirect("subscription-plans")
     access_token = get_access_token()
     result=get_subscription_details(access_token, sub_details.paypal_subscription_id)
     if result['plan_id']=="P-2EA74263YC2500708M6KPIXI":

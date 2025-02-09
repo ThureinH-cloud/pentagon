@@ -20,7 +20,7 @@ def sign_up( request):
     if form.is_valid():
         current_user=form.save(commit=False)
         form.save()
-        account_status=AccountStatus.objects.create(user=current_user)
+        AccountStatus.objects.create(user=current_user)
         token = default_token_generator.make_token(current_user)
         uid = urlsafe_base64_encode(str(current_user.id).encode())
         verification_link = reverse('verify_email', kwargs={'uidb64': uid, 'token': token})
@@ -29,7 +29,6 @@ def sign_up( request):
             'full_link':full_link
         }
         send_mail('Welcome To Pentagon','', from_email=settings.DEFAULT_FROM_EMAIL, recipient_list=[current_user.email],html_message=render_to_string('account/verify-email-sent.html',context))
-       
         return redirect('sign-in')
     return render(request, 'account/sign-up.html', {"form":form})
 
@@ -107,12 +106,12 @@ def create_subscription(request):
     result=get_subscription_details(access_token, subId)
     if result is None:
         messages.error(request, "Subscription already exists or invalid data provided.")
-        return redirect("subscription-plans")
+        return redirect("home")
     try:
         Subscription.objects.create(subscriber_email=email,subscription_plan=selected_sub_plan,subscription_cost=sub_cost,paypal_subscription_id=subId,is_active=True,user=request.user)
     except IntegrityError:
         messages.error(request, "Subscription already exists or invalid data provided.")
-        return redirect("subscription-plans")
+        return redirect("home")
     
 
     context={

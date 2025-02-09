@@ -1,6 +1,10 @@
 {% extends 'reader/base.html' %}
+{% block title %}
+    Subscription Plans - Pentagon
+  {% endblock  %}
 {% block content %}
 <div class=" bg-base-200 min-h-screen">
+  
   {% for message in messages %}
             <div class="message {{ message.tags }}">
               <div role="alert" class="alert alert-error mb-2">

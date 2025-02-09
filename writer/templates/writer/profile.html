@@ -65,13 +65,15 @@
                 <br>
                 <h3> Remaining:{{user_subscription.remaining}} days </h3>
                 <br>
-                <a class="btn btn-error mb-2" href="{% url 'delete-subscription' user_subscription.paypal_subscription_id %}">Deactivate Plan</a>
-                <a href="{% url 'update-subscription' user_subscription.paypal_subscription_id %}" class="btn btn-accent">Change 
+                <form action="{% url 'delete-subscription' user_subscription.paypal_subscription_id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-error mb-2" >Deactivate Plan</button>
+                </form>                
                 {% if user_subscription.subscription_plan == "Standard" %}
-                  Premium
-                  
+                <a href="{% url 'update-subscription' user_subscription.paypal_subscription_id %}" class="btn btn-accent">Change 
+                  Premium Plan</a>
                 {% endif %}
-                   Plan</a>
+                   
                 {% else %}
                 None
               {% endif %}
