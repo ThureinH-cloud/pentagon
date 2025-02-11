@@ -17,16 +17,20 @@ def get_account_status(request):
     return account_status
 @login_required(login_url="sign-in")
 def client_home(request):
+    recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
+
     query=request.GET.get("search","")
     if query:
         articles=Article.objects.filter(title__icontains=query)
+        print(articles)
         context={
-            "results":articles
+            "results":articles,
+            "recent_articles":recent_articles,
+            "query":query
         }
         return render(request,"reader/search_results.html",context)
     articles=Article.objects.all()
     paginator=Paginator(articles,2)
-    recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
     page_number=request.GET.get("page")
     page_object=paginator.get_page(page_number)
     accounts=AccountStatus.objects.exclude(user__username="admin")
@@ -95,9 +99,8 @@ def standard_posts(request):
         return redirect("subscription-locked")
     if sub_user.subscription_plan == 'Premium' or 'Standard':
         articles=Article.objects.filter(is_standard=True)
-        article_standard_authors=Article.objects.filter(is_standard=True).values('author').distinct()
-        article_authors=User.objects.filter(id__in=article_standard_authors)
-        accounts=AccountStatus.objects.filter(user__in=article_authors)
+        article_standard_authors=Article.objects.filter(is_standard=True).values('author')
+        accounts=AccountStatus.objects.filter(user__in=article_standard_authors)
         context={
             "articles":articles,
             "accounts":accounts,
@@ -134,10 +137,15 @@ def premium_posts(request):
     except Subscription.DoesNotExist:
         return redirect("subscription-locked")
     if sub_user.subscription_plan == "Premium":
-        articles=Article.objects.filter(is_premium=True)
+        articles=Article.objects.filter(is_premium=True).select_related("author")
+        authors=AccountStatus.objects.filter(user__in=articles.values("author"))
+        categories=Article.objects.filter(is_premium=True).values("category")
+        recent_posts=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
         context={
             "articles":articles,
-            "account_status":get_account_status(request)
+            "account_status":get_account_status(request),
+            "authors":authors,
+            "categories":categories
         }
         return render(request, "reader/premium-posts.html", context)
     else:

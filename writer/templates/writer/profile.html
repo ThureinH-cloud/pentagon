@@ -63,11 +63,11 @@
               {% if user_subscription.is_active %}
                 {{user_subscription.subscription_plan}} 
                 <br>
-                <h3> Remaining:{{user_subscription.remaining}} days </h3>
+                <h3 class="flex items-center"> Remaining:{{user_subscription.remaining}} days <i class="fa-solid fa-clock ml-1"></i></h3>
                 <br>
                 <form action="{% url 'delete-subscription' user_subscription.paypal_subscription_id %}" method="post">
                   {% csrf_token %}
-                  <button type="submit" class="btn btn-error mb-2" >Deactivate Plan</button>
+                  <button type="submit" class="btn btn-error mb-2 text-white" ><i class="fa-solid fa-ban"></i>Deactivate Plan</button>
                 </form>                
                 {% if user_subscription.subscription_plan == "Standard" %}
                 <a href="{% url 'update-subscription' user_subscription.paypal_subscription_id %}" class="btn btn-accent">Change 
