@@ -279,6 +279,16 @@
                                     </div>
                                   </div>
                                      <h2 class="mx-4 text-lg">{{account.user.username}}</h2> 
+                                     
+                                     {% if account.rank == "Platinum" %}
+                                     <i class="fa-solid fa-trophy text-warning"></i>
+
+                                     {% elif account.rank == "Gold" %}
+                                     {% else %}
+                                     <i class="fa-solid fa-medal "></i>
+
+                                     {% endif %}
+                                      
                                </div>
                                {% endfor %}
                                 

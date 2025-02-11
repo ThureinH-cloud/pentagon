@@ -47,8 +47,6 @@ class Article(models.Model):
     
     def get_author_name(self):
         return self.author.username
-    def get_author_article_count(self):
-        return Article.objects.filter(author=self.author).count()
     
     def get_account_status(self):
         try:
@@ -89,6 +87,6 @@ class ArticleCollection(models.Model):
 class RecentArticle(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE)
     article=models.ForeignKey(Article, on_delete=models.CASCADE)
-    created_at=models.DateTimeField(auto_now_add=True)
+    created_at=models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.user.username + " - " + self.article.title
