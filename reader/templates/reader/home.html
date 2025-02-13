@@ -278,15 +278,20 @@
                                       <img src="{{account.profile.url}}" />
                                     </div>
                                   </div>
-                                     <h2 class="mx-4 text-lg">{{account.user.username}}</h2> 
-                                     
-                                     {% if account.rank == "Platinum" %}
-                                     <i class="fa-solid fa-trophy text-warning"></i>
+                                     <h2 class="mx-2 text-lg flex items-center">{{account.user.username}}
+
+                                      {% if account.rank == "Platinum" %}
+                                     <i class="fa-solid fa-trophy text-warning ml-1"></i>
 
                                      {% elif account.rank == "Gold" %}
-                                     {% else %}
-                                     <i class="fa-solid fa-medal "></i>
+                                     <i class="fa-solid fa-award  text-yellow-600	ml-1"></i>
 
+                                     {% else %}
+                                     <i class="fa-solid fa-medal ml-1"></i>
+
+                                     </h2> 
+                                     
+                                     
                                      {% endif %}
                                       
                                </div>

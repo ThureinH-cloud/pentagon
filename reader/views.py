@@ -101,6 +101,7 @@ def standard_posts(request):
     if sub_user.subscription_plan == 'Premium' or 'Standard':
         articles=Article.objects.filter(is_standard=True)
         article_standard_authors=Article.objects.filter(is_standard=True).values('author')
+        article_categories=Article.objects.filter(is_standard=True).values("category").distinct()
         accounts=AccountStatus.objects.filter(user__in=article_standard_authors)
         recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
         query=request.GET.get("search","")
@@ -116,7 +117,9 @@ def standard_posts(request):
         context={
             "articles":articles,
             "accounts":accounts,
-            "account_status":get_account_status(request)
+            "account_status":get_account_status(request),
+            "recent_articles":recent_articles,
+            "categories":article_categories
         }
         return render(request, "reader/standard-posts.html", context)
     else:
