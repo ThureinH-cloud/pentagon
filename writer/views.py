@@ -43,7 +43,7 @@ def create_article(request):
 @login_required(login_url="sign-in")
 def create_standard_article(request):
     user_rank=AccountStatus.objects.get(user=request.user)
-    if user_rank.rank=="Gold":
+    if user_rank.rank != "Silver" :
         form=StandardArticleForm(request.POST or None)
         if request.method == "POST":
             form=StandardArticleForm(request.POST, request.FILES)
@@ -61,18 +61,23 @@ def create_standard_article(request):
 
 @login_required(login_url="sign-in")
 def create_premium_article(request):
-    form=PremiumArticleForm(request.POST or None)
-    if request.method == "POST":
-        form=PremiumArticleForm(request.POST, request.FILES)
-        if form.is_valid():
-            article=form.save(commit=False)
-            article.author=request.user
-            article.save()
-            return redirect("writer-dashboard")
-    context={
-        "form":form
-    }
+    user_rank=AccountStatus.objects.get(user=request.user)
+    if user_rank.rank != "Silver" and "Gold":
+        form=PremiumArticleForm(request.POST or None)
+        if request.method == "POST":
+            form=PremiumArticleForm(request.POST, request.FILES)
+            if form.is_valid():
+                article=form.save(commit=False)
+                article.author=request.user
+                article.save()
+                return redirect("writer-dashboard")
+        context={
+            "form":form
+        }
+    else:
+        return redirect("writer-ranks")
     return render(request, "writer/create-premium-article.html", context)
+
 
 @login_required(login_url="sign-in")
 def update_article(request,id):
@@ -80,8 +85,10 @@ def update_article(request,id):
     try:
         user=request.user
         article=Article.objects.get(id=id, author=user)
+        
     except Article.DoesNotExist:
         return redirect("writer-dashboard")
+    
     if request.method == "POST":
         article.author=user
         article.title=request.POST.get("title")

@@ -16,6 +16,7 @@ urlpatterns = [
     path('subscription-update-success/', views.subscription_update_success, name="subscription-update-success"),
     path('tab/',views.tab,name="tab"),
     path('standard-posts/subscription-posts/',views.subscription_posts,name="subscription-posts"),
+    path('premium-posts/subscription-posts',views.premium_subscription_posts,name="premium_subscription-posts"),
     path('favorite/<int:id>/',views.article_favorite,name="article-favorite"),
     path('del-favorite/<int:id>/',views.remove_favorite,name="remove-favorite"),
     path('article-review/<int:id>',views.article_review,name="article-review"),

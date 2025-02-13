@@ -97,10 +97,22 @@ def standard_posts(request):
         sub_user=Subscription.objects.get(user=request.user,is_active=True)
     except Subscription.DoesNotExist:
         return redirect("subscription-locked")
+    
     if sub_user.subscription_plan == 'Premium' or 'Standard':
         articles=Article.objects.filter(is_standard=True)
         article_standard_authors=Article.objects.filter(is_standard=True).values('author')
         accounts=AccountStatus.objects.filter(user__in=article_standard_authors)
+        recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
+        query=request.GET.get("search","")
+        if query:
+            articles=Article.objects.filter(title__icontains=query)
+            print(articles)
+            context={
+                "results":articles,
+                "recent_articles":recent_articles,
+                "query":query
+            }
+            return render(request,"reader/search_results.html",context)
         context={
             "articles":articles,
             "accounts":accounts,
@@ -131,6 +143,26 @@ def subscription_posts(request):
     return render(request, "reader/subscription-posts-filter.html", context)
 
 @login_required(login_url="sign-in")
+def premium_subscription_posts(request):
+    param=request.GET.get("select")
+    try:
+        Subscription.objects.get(user=request.user,is_active=True)
+    except Subscription.DoesNotExist:
+        return redirect("subscription-locked")
+    if "Latest" in param:
+        articles=Article.objects.filter(is_premium=True).order_by("-posted_at")
+    elif "Highest" in param:
+        articles=Article.objects.filter(is_premium=True).annotate(avg_rating=Avg('article_review__rating')).order_by("-avg_rating")
+    elif "Most Favorite" in param:
+        articles=Article.objects.filter(is_premium=True).annotate(favorite_count=Count('favorite__article')).order_by("-favorite_count")
+    context={
+        "articles":articles,
+        "param":param,
+        "account_status":get_account_status(request)
+    }
+    return render(request, "reader/subscription-posts-filter.html", context)
+
+@login_required(login_url="sign-in")
 def premium_posts(request):
     try:
         sub_user=Subscription.objects.get(user=request.user,is_active=True)
@@ -145,7 +177,8 @@ def premium_posts(request):
             "articles":articles,
             "account_status":get_account_status(request),
             "authors":authors,
-            "categories":categories
+            "categories":categories,
+            "recent_posts":recent_posts
         }
         return render(request, "reader/premium-posts.html", context)
     else:

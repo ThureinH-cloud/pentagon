@@ -1,4 +1,7 @@
 {% extends "reader/base.html" %}
+{% block title %}
+  Standard Articles - Pentagon
+{% endblock  %}
 {% block content %}
 
 <div class=" bg-base-200 min-h-screen flex w-100">
@@ -33,7 +36,7 @@
 
             </div>
             <h2 class="card-title font-bold">{{article.title}}</h2>
-            <p class="line-clamp-3">{{article.content|truncatewords:30}}</p>
+            <p class="line-clamp-3">{{article.content|safe|truncatewords:30}}</p>
             <div class="card-actions justify-between">
               <a href="{% url 'post-detail' article.id %}" class="btn btn-primary"> Read More<i class="fa-solid fa-circle-right"></i></a>
               <div>
