@@ -12,6 +12,7 @@ urlpatterns = [
     path('subscription-locked/',views.subscription_locked,name="subscription-locked"),
     path('subscription-plans/',views.subscription_plans,name="subscription-plans"),
     path('delete-subscription/<subId>/',views.delete_subscription,name='delete-subscription'),
+    path('deactivate-subscription',views.deactivate_subscription,name="deactivate-subscription"),
     path('update-subscription/<subId>/',views.update_subscription,name="update-subscription"),
     path('subscription-update-success/', views.subscription_update_success, name="subscription-update-success"),
     path('tab/',views.tab,name="tab"),

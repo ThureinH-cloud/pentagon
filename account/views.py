@@ -114,7 +114,5 @@ def create_subscription(request):
         return redirect("home")
     
 
-    context={
-        "SubscriptionPlan":selected_sub_plan
-    }
-    return render(request, "reader/subscription-success.html", context)
+    
+    return redirect("subscription-success")

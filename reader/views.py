@@ -190,14 +190,19 @@ def subscription_locked(request):
 @login_required(login_url='sign-in')
 def subscription_plans(request):
     account_status=AccountStatus.objects.get(user=request.user)
-    return render(request, "reader/subscription-plans.html")
+    return render(request, "reader/subscription-plans.html",{"account_status":account_status})
 
 def search(request):
     pass
 
 @login_required(login_url="sign-in")
 def subscription_success(request):
-    return render(request, "reader/subscription-success.html")
+    sub_user=Subscription.objects.get(user=request.user)
+    context={
+        "SubscriptionPlan":sub_user.subscription_plan,
+        "account_status":get_account_status(request)
+    }
+    return render(request, "reader/subscription-success.html",context)
 
 @login_required(login_url="sign-in")
 def category(request,category):
@@ -229,7 +234,13 @@ def delete_subscription(request,subId):
     except Subscription.DoesNotExist:
         messages.error(request,"Subscription doesn't exist")
         return redirect("subscription-plans")
-    return render(request, "reader/delete-subscription.html")
+    return redirect("deactivate-subscription")
+
+@login_required(login_url="sign-in")
+def deactivate_subscription(request):
+    account_status=AccountStatus.objects.get(user=request.user)
+    return render(request, "reader/delete-subscription.html",{"account_status":account_status})
+
 
 @login_required(login_url="sign-in")
 def update_subscription(request,subId):
