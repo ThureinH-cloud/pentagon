@@ -62,7 +62,7 @@ def create_standard_article(request):
 @login_required(login_url="sign-in")
 def create_premium_article(request):
     user_rank=AccountStatus.objects.get(user=request.user)
-    if user_rank.rank != "Silver" and "Gold":
+    if user_rank.rank == "Platinum":
         form=PremiumArticleForm(request.POST or None)
         if request.method == "POST":
             form=PremiumArticleForm(request.POST, request.FILES)
