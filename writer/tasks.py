@@ -14,12 +14,12 @@ def update_user_rank():
         print(user_articles)
         user_metrics=user_page_view['total_views']/user_articles['total_articles']
         print(user_metrics)
-        if user_metrics>1000:
+        if user_metrics>=1000:
             account_status=AccountStatus.objects.get(user=user)
             account_status.rank='Platinum'
             account_status.save()
             print("User reached Platinum.")
-        elif user_metrics>500:
+        elif user_metrics>=500:
             account_status=AccountStatus.objects.get(user=user)
             account_status.rank='Gold'
             account_status.save()
