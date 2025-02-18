@@ -12,7 +12,7 @@ class Subscription(models.Model):
     is_active=models.BooleanField(default=False)
     user=models.OneToOneField(User,max_length=255,blank=True,on_delete=models.CASCADE,unique=True,related_name="sub_user")
     created_at=models.DateField(auto_now_add=True)
-    expires_at=models.DateField(blank=True, null=True,default=datetime.now()+timedelta(days=30))
+    expires_at=models.DateField(blank=True, null=True)
     def remaining(self):
         if self.expires_at:
             time_remaining=self.expires_at-datetime.now().date()

@@ -23,4 +23,5 @@ urlpatterns = [
     path('article-review/<int:id>',views.article_review,name="article-review"),
     path('paypal-update-confirmed/',views.subscription_update_success,name="paypal-update"),
     path('confirm-update-subscription/',views.confirm_update_subscription,name="confirm-update"),
+    path('update-author-reply/<int:id>/',views.update_author_reply,name="update-author-reply")
 ]

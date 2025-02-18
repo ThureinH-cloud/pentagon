@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from django.db import IntegrityError
 from django.shortcuts import render,redirect
 from .forms import CreateUserForm,LoginForm,UpdateUserForm
@@ -108,7 +109,7 @@ def create_subscription(request):
         messages.error(request, "Subscription already exists or invalid data provided.")
         return redirect("home")
     try:
-        Subscription.objects.create(subscriber_email=email,subscription_plan=selected_sub_plan,subscription_cost=sub_cost,paypal_subscription_id=subId,is_active=True,user=request.user)
+        Subscription.objects.create(subscriber_email=email,subscription_plan=selected_sub_plan,subscription_cost=sub_cost,paypal_subscription_id=subId,is_active=True,user=request.user,expires_at=datetime.now()+timedelta(days=30))
     except IntegrityError:
         messages.error(request, "Subscription already exists or invalid data provided.")
         return redirect("home")

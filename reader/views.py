@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from .paypal import get_access_token,cancel_subscription, get_subscription_details,update_subscription_plan
 from django.db.models import Avg,Count
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator
 
 # Create your views here.
@@ -87,7 +87,7 @@ def article_detail(request,id):
         'account_status':account_status,
         'article_reviews':article_reviews,
         'user_favorites':user_favorites,
-        'article_favorite':article_favorite
+        'article_favorite':article_favorite,
     }
     return render(request, "reader/post-detail.html", context)
 
@@ -316,3 +316,10 @@ def article_review(request,id):
         ArticleReview.objects.create(user=request.user, article=article, comment=comment, rating=rating) 
         return redirect("client-home")       
 
+
+def update_author_reply(request,id):
+    article_review=ArticleReview.objects.get(article=id)
+    if request.method == "POST":
+        article_review.author_reply=request.POST.get("author_reply")
+        article_review.save()
+        return HttpResponseRedirect("/")
