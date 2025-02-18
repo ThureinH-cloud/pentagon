@@ -251,7 +251,7 @@
                   <div class="divider"></div>
                   
                    
-                   {% if article.author != user %}
+                 
                    <div class="">
                     <form action="{% url 'article-review' article.id %}" method="post">
                       {% csrf_token %}
@@ -385,7 +385,6 @@
                       <input type="submit" class="btn btn-active" value="Submit">
                     </form>
                   </div>
-                   {% endif %}
                      
                   
                     
