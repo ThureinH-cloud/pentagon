@@ -311,6 +311,8 @@ def article_review(request,id):
         article=Article.objects.get(id=id)
         comment=request.POST.get("comment")
         rating=request.POST.get("rating")
+        if rating is None:
+            rating=0
         ArticleReview.objects.create(user=request.user, article=article, comment=comment, rating=rating) 
         return redirect("client-home")       
 

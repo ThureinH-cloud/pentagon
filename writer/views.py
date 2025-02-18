@@ -53,7 +53,8 @@ def create_standard_article(request):
                 article.save()
                 return redirect("writer-dashboard")
         context={
-            "form":form
+            "form":form,
+            "account_status":get_account_status(request)
         }
     else:
         return redirect("writer-ranks")
@@ -72,10 +73,11 @@ def create_premium_article(request):
                 article.save()
                 return redirect("writer-dashboard")
         context={
+            "account_status":get_account_status(request),
             "form":form
         }
     else:
-        return redirect("writer-ranks")
+        return redirect("rank_locked")
     return render(request, "writer/create-premium-article.html", context)
 
 
@@ -150,6 +152,10 @@ def create_collection(request):
         "form":article_collection_form
     }
     return render(request, "writer/create-collection.html",context)
+
+@login_required(login_url="sign-in")
+def rank_locked(request):
+    return render(request, "writer/rank-locked.html")
 
 @login_required(login_url="sign-in")
 def writer_ranks(request):

@@ -1,0 +1,24 @@
+{% extends 'writer/writer-dashboard.html' %}
+{% block title %}
+  Rank-Locked - Pentagon
+{% endblock  %}
+{% block writer %}
+    <div class="flex">
+        <div class="justify-self-center ml-80">
+            <div class="max-w-md">
+             
+              <div class="card my-4 bg-base-200 w-100 shadow-xl">
+                  <div class="card-body">
+                    <i class="fa-solid fa-lock text-center text-5xl"></i>
+      
+                      <div class="flex justify-center">
+                          <h3 class="uppercase">Rank Locked</h3>
+                      </div>
+                      <p class="text-sm my-5">Please upgrade your rank by writing your articles!</p>
+                      <a href="{% url 'writer-ranks' %}" class="btn btn-active uppercase flex items-center"><i class="fa-solid fa-briefcase"></i>Writer Ranks </a>
+                  </div>
+                </div>
+            </div>
+          </div>
+    </div>
+{% endblock  %}

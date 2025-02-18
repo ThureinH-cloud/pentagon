@@ -66,8 +66,9 @@ class ArticleReview(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE, related_name="article_reviewer")
     comment=models.TextField(blank=True, null=True)
     rating=models.FloatField(default=0,blank=True, null=True)
+    author_reply=models.TextField(blank=True, null=True)
     posted_at=models.DateTimeField(auto_now_add=True)
-    
+
     def comment_count(self):
         return len(self.comment)
     def get_commenter(self):
