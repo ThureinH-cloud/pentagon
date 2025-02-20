@@ -3,13 +3,13 @@ from django.contrib.auth.decorators import login_required
 from .models import Subscription,Favorite
 from account.models import AccountStatus
 from writer.models import Article,ArticleReview,RecentArticle
-from django.contrib.auth.models import User
 from django.contrib import messages
 from .paypal import get_access_token,cancel_subscription, get_subscription_details,update_subscription_plan
 from django.db.models import Avg,Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator
-
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 # Create your views here.
 
 def get_account_status(request):
@@ -313,8 +313,19 @@ def article_review(request,id):
         rating=request.POST.get("rating")
         if rating is None:
             rating=0
+        
         ArticleReview.objects.create(user=request.user, article=article, comment=comment, rating=rating) 
-        return redirect("client-home")       
+        channel_layer = get_channel_layer()
+
+        async_to_sync(channel_layer.group_send)(
+            "comments_group",
+            {
+                "type": "send_comment",
+                "text": comment,
+                "user": request.user.username,
+            }
+        )
+        return redirect("client-home")      
 
 
 def update_author_reply(request,id):

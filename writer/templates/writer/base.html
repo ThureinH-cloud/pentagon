@@ -23,5 +23,27 @@
     {% endblock  %}
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{% static 'js/loading.js' %}"></script>
+    <script>
+        const socket = new WebSocket("ws://localhost:8000/ws/comments/");
+
+        socket.onopen = function() {
+            console.log("WebSocket Connected!");
+        };
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log("New Comment from:", data.user);
+            console.log("Comment Text:", data.text);
+        };
+
+        socket.onerror = function(error) {
+            console.log("WebSocket Error:", error);
+        };
+
+        socket.onclose = function() {
+            console.log("WebSocket Disconnected!");
+        };
+
+    </script>
 </body>
 </html>

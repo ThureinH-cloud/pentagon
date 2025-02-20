@@ -31,6 +31,7 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,7 +46,14 @@ INSTALLED_APPS = [
     'crispy_daisyui',
     'django_recaptcha',
     'fontawesomefree',
+    'channels'
 ]
+CHANNEL_LAYERS = {
+    'default': {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
+
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'daisyui'
 CRISPY_TEMPLATE_PACK = 'daisyui'
 RECAPTCHA_PUBLIC_KEY="6Lfmc70qAAAAAP3caI9XFmfsFlGfGi4vkkZdM11i"
@@ -85,6 +93,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'pentagon.wsgi.application'
+ASGI_APPLICATION = 'pentagon.asgi.application'
 
 
 # Database
@@ -179,7 +188,7 @@ CELERY_BEAT_SCHEDULE = {
     'clean_recent_articles':{
         "task": "writer.tasks.clean_recent_articles",
         'schedule':60
-    }
+    },
     
 }
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True 
@@ -194,4 +203,5 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
 CELERY_TASK_TIME_LIMIT = 10
 CELERY_ACKS_LATE = True  
 CELERY_TASK_REJECT_ON_WORKER_LOST = True
- 
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
