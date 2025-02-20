@@ -313,10 +313,8 @@ def article_review(request,id):
         rating=request.POST.get("rating")
         if rating is None:
             rating=0
-        
         ArticleReview.objects.create(user=request.user, article=article, comment=comment, rating=rating) 
         channel_layer = get_channel_layer()
-
         async_to_sync(channel_layer.group_send)(
             "comments_group",
             {

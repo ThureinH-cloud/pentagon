@@ -14,13 +14,17 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 from django.urls import path
 from reader.consumers import CommentConsumer
+from channels.sessions import SessionMiddlewareStack
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pentagon.settings')
 
 application=ProtocolTypeRouter({
     'http':get_asgi_application(),
-    "websocket": AuthMiddlewareStack(
+    "websocket":SessionMiddlewareStack(
+        AuthMiddlewareStack(
         URLRouter([
             path('ws/comments/', CommentConsumer.as_asgi()),
         ])
     ),
+    )
 })

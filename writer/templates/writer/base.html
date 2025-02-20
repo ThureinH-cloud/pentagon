@@ -22,7 +22,6 @@
       
     {% endblock  %}
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="{% static 'js/loading.js' %}"></script>
     <script>
         const socket = new WebSocket("ws://localhost:8000/ws/comments/");
 
@@ -34,6 +33,7 @@
             const data = JSON.parse(event.data);
             console.log("New Comment from:", data.user);
             console.log("Comment Text:", data.text);
+            console.log(event)
         };
 
         socket.onerror = function(error) {
