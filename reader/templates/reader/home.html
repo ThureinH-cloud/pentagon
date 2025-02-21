@@ -344,7 +344,15 @@
      
       </div>
     </div> -->
-   
+    {% if show_spinner %}
+      <script>
+        document.getElementById('loading-spinner').style.display = 'block';
+        setTimeout(function() {
+          document.getElementById('loading-spinner').style.display = 'none';
+        }, 3000);
+      </script>
+      
+    {% endif %}
     <script>
       document.getElementById('applyFilterBtn').addEventListener('click', function() {
         var selectedValue = document.getElementById('postFilter').value;

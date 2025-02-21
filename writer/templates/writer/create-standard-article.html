@@ -18,20 +18,20 @@
             {% csrf_token %}
             <div class="my-3">
               <h3 for="">Title</h3>
-              <input name="title" value="{{article.title}}" type="text" placeholder="Enter Title" class="input input-bordered  w-full">
+              <input name="title" required value="{{article.title}}" type="text" placeholder="Enter Title" class="input input-bordered  w-full">
             </div>
             <div class="my-3">
               <h3 for="">Content</h3>
-              <textarea cols="30"  rows="10" name="content" id="content">{{article.content|safe}}</textarea>
+              <textarea cols="30" required rows="10" name="content" id="content">{{article.content|safe}}</textarea>
             </div>
             <div class="my-3">
               <h3 for="">Photo</h3>
                 <img class="my-2" style="max-height:150px;" src="{{article.photo.url}}" alt="">
-              <input name="photo" type="file" class="file-input file-input-bordered file-input-primary w-full" />
+              <input name="photo" required type="file" class="file-input file-input-bordered file-input-primary w-full" />
             </div>
             <div class="my-3">
               <h3 for="">Category</h3>
-              <select name="category" class="select select-bordered w-full">
+              <select required name="category" class="select select-bordered w-full">
                 <option disabled selected>Select Category</option>
                 {% for key,value in categories %}
                   
@@ -47,7 +47,6 @@
               </select>
             </div>
             
-            {% if article.is_standard is True %}
             <div class="flex justify-between">
               <h3 for="">Is Standard</h3>
               <div class="form-control">
@@ -60,21 +59,7 @@
                 </label>
               </div>
             </div>
-            {% endif %}
-            {% if article.is_premium is True %}
-            <div class="flex justify-between">
-              <h3 for="">Is Premium</h3>
-              <div class="form-control">
-                <label class="cursor-pointer label">
-                  <input type="checkbox"  name="is_premium"
-                  {% if article.is_premium %}
-                    checked="checked"
-                  {% endif %}
-                     class="checkbox checkbox-warning" />
-                </label>
-              </div>
-            </div>
-            {% endif %}
+            
             <input type="submit" class="btn btn-secondary" value="Update">
           </form>
         </div>

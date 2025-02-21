@@ -26,6 +26,7 @@ def writer_dashboard(request):
 @login_required(login_url="sign-in")
 def create_article(request):
     categories=Article.CATEGORY_CHOICES
+    print(categories)
     if request.method == "POST":
         article_author=request.user
         category=request.POST.get("category")
@@ -43,6 +44,8 @@ def create_article(request):
 @login_required(login_url="sign-in")
 def create_standard_article(request):
     user_rank=AccountStatus.objects.get(user=request.user)
+    categories=Article.CATEGORY_CHOICES
+
     if user_rank.rank != "Silver" :
         form=StandardArticleForm(request.POST or None)
         if request.method == "POST":
@@ -54,6 +57,7 @@ def create_standard_article(request):
                 return redirect("writer-dashboard")
         context={
             "form":form,
+            "categories":categories,
             "account_status":get_account_status(request)
         }
     else:
@@ -63,6 +67,7 @@ def create_standard_article(request):
 @login_required(login_url="sign-in")
 def create_premium_article(request):
     user_rank=AccountStatus.objects.get(user=request.user)
+    categories=Article.CATEGORY_CHOICES
     if user_rank.rank == "Platinum":
         form=PremiumArticleForm(request.POST or None)
         if request.method == "POST":
@@ -74,7 +79,8 @@ def create_premium_article(request):
                 return redirect("writer-dashboard")
         context={
             "account_status":get_account_status(request),
-            "form":form
+            "form":form,
+            "categories":categories
         }
     else:
         return redirect("rank_locked")

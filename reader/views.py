@@ -10,6 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from django.contrib.auth.models import User
 # Create your views here.
 
 def get_account_status(request):
@@ -33,14 +34,18 @@ def client_home(request):
     paginator=Paginator(articles,2)
     page_number=request.GET.get("page")
     page_object=paginator.get_page(page_number)
-    accounts=AccountStatus.objects.exclude(user__username="admin")
+    users=User.objects.all()
+    authors=Article.objects.filter(author__in=users).values('author').distinct()
+    accounts=AccountStatus.objects.filter(user__in=authors)
+    print(accounts)
     categories=Article.objects.values('category').distinct()
     context={
         'account_status':get_account_status(request),
         'accounts':accounts,
         'categories':categories,
         "page_objects":page_object,
-        "recent_articles":recent_articles
+        "recent_articles":recent_articles,
+        "show_spinner":True
     }
     return render(request, "reader/home.html",context)
 

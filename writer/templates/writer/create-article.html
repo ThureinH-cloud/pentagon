@@ -5,7 +5,8 @@
   Create Article - Pentagon
 {% endblock  %}
 {% block writer %}
-    
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.19.3/jquery.validate.min.js"></script>
     <div class="w-full">
       <div class="grid grid-cols-6 gap-4">
         <div class="col-start-1 col-span-4">
@@ -17,23 +18,24 @@
           </div>
           <div class="card m-4 bg-base-200 shadow-xl">
             <div class="card-body">
-              <form action="" method="post" enctype="multipart/form-data">
+              <form id="article" action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="my-3">
                   <h3 for="">Title</h3>
-                  <input name="title" type="text" placeholder="Enter Title" class="input input-bordered  w-full">
+                  <input name="title" id="title" type="text" required placeholder="Enter Title" class="input input-bordered  w-full">
+                  <span id="titleError" class="text-danger"></span>
                 </div>
                 <div class="my-3">
                   <h3 for="">Content</h3>
-                  <textarea cols="30" rows="10" name="content" id="content"></textarea>
+                  <textarea cols="30" required rows="10" name="content" id="content"></textarea>
                 </div>
                 <div class="my-3">
                   <h3 for="">Photo</h3>
-                  <input name="photo" type="file" class="file-input file-input-bordered file-input-primary w-full" />
+                  <input required name="photo" id="photo" type="file" class="file-input file-input-bordered file-input-primary w-full" />
                 </div>
                 <div class="my-3">
                   <h3 for="">Category</h3>
-                  <select name="category" class="select select-bordered w-full">
+                  <select required id="select" name="category" class="select select-bordered w-full">
                     <option disabled selected>Select Category</option>
                     
                     {% for key,value in categories %}
@@ -50,6 +52,28 @@
       </div>
     </div>
     <script src="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.umd.js"></script>
+    
+    <script>
+      $(document).ready(function() {
+        $("#article").validate({
+            rules: {
+                title: {
+                    required:true,
+                    
+                },
+                content:{
+                  required:true,
+                  minlength:100
+                }
+            },
+            messages: {
+                title: "Please enter title",
+                content
+            }
+        });
+    });
+    </script>
+
     <script>
       const {
         ClassicEditor,
@@ -60,7 +84,7 @@
         Paragraph
       } = CKEDITOR;
       ClassicEditor
-              .create( document.querySelector('#content'), {
+              .create(document.querySelector('#content'), {
                 licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NzA1MDg3OTksImp0aSI6IjAyZDkwOTM0LWM0ODgtNGZiMi1iMTExLTJjYmJjYTYwZGEwNiIsImxpY2Vuc2VkSG9zdHMiOlsiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJ1c2FnZUVuZHBvaW50IjoiaHR0cHM6Ly9wcm94eS1ldmVudC5ja2VkaXRvci5jb20iLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIl0sImxpY2Vuc2VUeXBlIjoiZGV2ZWxvcG1lbnQiLCJmZWF0dXJlcyI6WyJEUlVQIl0sInZjIjoiNDM3MGQwZjAifQ.UOL-TuFiyxJR8UrIsuqtMxA1RRWSPfVfJZ_yNLaXArzgD0uKBUvQ41IRFddexL0a2wJ3Mq11ChETpl9zcySBZw', // Create a free account on https://portal.ckeditor.com/checkout?plan=free
                 plugins: [ Essentials, Bold, Italic, Font, Paragraph ],
                 toolbar: [
@@ -74,5 +98,6 @@
               .catch( error => {
                 console.error( error );
               } );
+      
     </script>
 {% endblock  %}
