@@ -1,5 +1,7 @@
 {% extends 'reader/base.html' %}
-
+{% block title %}
+  {{category}} - Pentagon
+{% endblock  %}
 {% block content %}
   
 <div class=" bg-base-200 min-h-screen flex w-100">
@@ -229,10 +231,10 @@
                   Recent Posts
                   <div class="card bg-base-100 w-96 shadow-xl">
                       <div class="card-body">
-                         {% for article in articles %}
+                         {% for article in recent_articles %}
                          <div class="flex-row flex items-center">
                          
-                               <h2 class="mx-4">- <a href="" class="link">{{article.category}}</a></h2> 
+                               <h2 class="mx-4">- <a href="{% url 'post-detail' article.article.id %}" class="link">{{article.article}}</a></h2> 
                          </div>
                          {% endfor %}
                           

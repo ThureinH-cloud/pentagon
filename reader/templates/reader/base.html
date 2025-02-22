@@ -113,6 +113,12 @@
      
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+      document.getElementById('loading-spinner').style.display = 'block';
+      setTimeout(function() {
+        document.getElementById('loading-spinner').style.display = 'none';
+      }, 3000);
+    </script>
+    <script>
       document.addEventListener('DOMContentLoaded', function() {
         const spinner = document.getElementById('loading-spinner');
       

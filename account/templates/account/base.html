@@ -13,16 +13,40 @@
         {% endblock  %}
     </title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.min.css" rel="stylesheet" type="text/css" />
-
+    <style>
+        /* CSS for the spinner */
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        
+        .spinner {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 9999;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.6);
+        }
+        </style>
 
 </head>
 <body>
+    <div id="loading-spinner" class="spinner" style="display: none;">
+        <span class="loading loading-dots loading-lg" style="position: fixed;top:50%;left:50%;"></span>
+    </div>
     {% block content %}
     
     {% endblock  %}
     {{ redirect_to_login_immediately }}
-    
+    <script>
+        document.getElementById('loading-spinner').style.display = 'block';
+        setTimeout(function() {
+          document.getElementById('loading-spinner').style.display = 'none';
+        }, 3000);
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="{% static 'js/loading.js' %}"></script>
 </body>
 </html>

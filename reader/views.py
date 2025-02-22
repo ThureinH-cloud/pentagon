@@ -218,11 +218,15 @@ def category(request,category):
     categories=Article.objects.values("category").distinct()
     authors=Article.objects.filter(category=category).values("author").distinct()
     accounts=AccountStatus.objects.filter(user__in=authors)
+    recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
+
     context={
         "category_articles":category_articles,
         "category":category,
         "categories":categories,
-        "accounts":accounts
+        "accounts":accounts,
+        "recent_articles":recent_articles,
+        "account_status":get_account_status(request)
     }
     return render(request, "reader/category_articles.html", context)
 
