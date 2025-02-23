@@ -11,6 +11,7 @@ from django.core.paginator import Paginator
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 # Create your views here.
 
 def get_account_status(request):
@@ -288,16 +289,25 @@ def confirm_update_subscription(request):
 def tab(request):
     param=request.GET.get("select")
     articles=None
+    recent_posts=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
     if "Latest" in param:
         articles=Article.objects.all().order_by("-posted_at")
+        authors=User.objects.filter(id__in=articles.values("author"))
+        accounts=AccountStatus.objects.filter(user__in=authors)
     elif "Highest" in param:
         articles=Article.objects.annotate(avg_rating=Avg('article_review__rating')).order_by("-avg_rating")
+        authors=User.objects.filter(id__in=articles.values("author"))
+        accounts=AccountStatus.objects.filter(user__in=authors)
     else:
         articles=Article.objects.annotate(favorite_count=Count('favorite__article')).order_by("-favorite_count")
+        authors=User.objects.filter(id__in=articles.values("author"))
+        accounts=AccountStatus.objects.filter(user__in=authors)
     context={
         "articles":articles,
         "param":param,
-        "account_status":get_account_status(request)
+        "account_status":get_account_status(request),
+        "recent_posts":recent_posts,
+        "accounts":accounts
     }
     return render(request, "reader/select-tab.html",context)
 

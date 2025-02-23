@@ -30,7 +30,7 @@
                             
                           >Most Favorite</option>
                         </select>
-                        <button id="applyFilterBtn" class="btn btn-active ml-2">Apply</button>
+                        <button id="applyFilterBtn" class="btn btn-active ml-2">Filter <i class="fa-solid fa-filter"></i></button>
                     </div>
                    </div>
                     {% for article in articles %}
@@ -205,10 +205,10 @@
                     Recent Posts
                     <div class="card bg-base-100 w-96 shadow-xl">
                         <div class="card-body">
-                           {% for article in articles %}
+                           {% for article in recent_posts %}
                            <div class="flex-row flex items-center">
                            
-                                 <h2 class="mx-4">- <a href="" class="link">{{article.category}}</a></h2> 
+                                 <h2 class="mx-4">- <a href="" class="link">{{article.article}}</a></h2> 
                            </div>
                            {% endfor %}
                             
