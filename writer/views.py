@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from .models import Article
-from .forms import StandardArticleForm,PremiumArticleForm,ArticleCollectionForm
+from .forms import ArticleForm, StandardArticleForm,PremiumArticleForm,ArticleCollectionForm
 from account.models import AccountStatus
 # Create your views here.
 def get_account_status(request):
@@ -25,8 +25,7 @@ def writer_dashboard(request):
 
 @login_required(login_url="sign-in")
 def create_article(request):
-    categories=Article.CATEGORY_CHOICES
-    print(categories)
+    article_form=ArticleForm(request.POST or None)
     if request.method == "POST":
         article_author=request.user
         category=request.POST.get("category")
@@ -34,10 +33,17 @@ def create_article(request):
         content=request.POST.get("content")
         photo=request.FILES.get("photo")
         Article.objects.create(author=article_author, category=category, title=title, content=content, photo=photo)
+        # article_form=ArticleForm(request.POST, request.FILES)
+        # if article_form.is_valid():
+        #     article=article_form.save(commit=False)
+        #     article.author=request.user
+        #     article.content=article_form.cleaned_data['content']
+        #     article.save()
         return redirect("writer-dashboard")
     context={
-        "categories":categories,
-        "account_status":get_account_status(request)
+        "categories":Article.CATEGORY_CHOICES,
+        "account_status":get_account_status(request),
+        "form":article_form
     }
     return render(request, "writer/create-article.html",context)
 
