@@ -4,7 +4,7 @@
 {% endblock  %}
 {% block content %}
   
-<div class="bg-base-200 min-h-screen flex w-100">
+<div class="bg-base-200 min-h-screen flex w-100 mt-4">
     <div class="grid grid-cols-8 gap-2 ">
         <div class="col-start-1 col-span-5 mt-12 mx-5">
             <div class="card">
@@ -12,12 +12,14 @@
                    <div class="flex justify-between items-center">
                     <p class="text-xl">Premium Posts</p>
                     <div class="flex w-80">
-                      <select id="postFilter" class="select select-bordered w-full max-w-xs ">
-                        <option  selected>Latest Posts</option>
-                        <option>Highest Rated</option>
-                        <option>Most Favorite</option>
-                      </select>
-                      <button id="applyFilterBtn" class="btn btn-active">Apply</button>
+                      <div class="flex w-80">
+                        <select id="postFilter" class="select select-bordered w-full max-w-xs ">
+                          <option  selected>Latest Posts</option>
+                          <option>Highest Rated</option>
+                          <option>Most Favorite</option>
+                        </select>
+                        <button id="applyFilterBtn" class="btn btn-active ml-2">Filter <i class="fa-solid fa-filter"></i></button>
+                      </div>
                     </div>
                    </div>
                     {% for article in articles %}
@@ -39,7 +41,7 @@
               <h2 class="card-title">{{article.title}}</h2>
               <p class="">{{article.content|safe|truncatewords:30}}</p>
               <div class="card-actions justify-between">
-                <a href="{% url 'post-detail' article.id %}" class="btn btn-primary">Read More</a>
+                <a href="{% url 'post-detail' article.id %}" class="btn btn-primary">Read More<i class="fa-solid fa-circle-right"></i></a>
                 <div>
                     <div class="flex-row flex items-center">
                         <div class="avatar">
@@ -50,19 +52,13 @@
                                 src="{{article.get_account_status.profile.url}}" />
                             </div>
                           </div>
-                          <h2 class="mx-4">{{article.get_author_name}}</h2>
+                          <h2 class="mx-2">{{article.get_author_name}}</h2>
                     </div>
                 </div>
               </div>
               <div class="flex justify-between items-center mt-2">
                 <div>
-                    {% if article.is_premium %}
-                    Premium
-                    {% elif article.is_standard %}
-                    Standard
-                    {% else %}
-                    Free
-                    {% endif %}
+                  <i class="fa-solid fa-crown text-warning"></i> Premium
                 </div>
                 <div class="flex items-center">
                   Rating:
@@ -173,9 +169,10 @@
                 
                 
                 <div class="">
-                    Views:
-                    <div class="badge badge-info badge-outline">{{article.view_count}}</div>
-                </div>
+                  
+                  <i class="fa-solid fa-eye mr-1"></i>Views:
+                 {{article.view_count}}
+              </div>
                
               </div>
             </div>
@@ -188,19 +185,22 @@
         <div class="col-start-6 col-span-2 mt-20">
             <div class="flex-row">
               <div class="ml-8">
-                <label class="input input-bordered flex items-center gap-2">
-                  <input type="text" class="grow" placeholder="Search" />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 16 16"
-                    fill="currentColor"
-                    class="h-4 w-4 opacity-70">
-                    <path
-                      fill-rule="evenodd"
-                      d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                      clip-rule="evenodd" />
-                  </svg>
-                </label>
+                <form action="" class="flex" method="get">
+                  <label class="input input-bordered flex items-center gap-2">
+                    <input type="text" class="grow" name="search" placeholder="Search" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 16 16"
+                      fill="currentColor"
+                      class="h-4 w-4 opacity-70">
+                      <path
+                        fill-rule="evenodd"
+                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                        clip-rule="evenodd" />
+                    </svg>
+                  </label>
+                  <input type="submit" value="Submit" class="btn btn-active ml-2">
+                </form>
               </div>
               <div class="card">
                 
@@ -232,7 +232,7 @@
                                   <img src="{{account.profile.url}}" />
                                 </div>
                               </div>
-                                 <h2 class="mx-4 text-lg">{{account.user.username}}</h2> 
+                                 <h2 class="mx-2 text-lg">{{account.user.username}}</h2> 
                            </div>
                            {% endfor %}
                             

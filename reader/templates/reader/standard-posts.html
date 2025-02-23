@@ -55,16 +55,10 @@
             </div>
             <div class="flex justify-between items-center mt-2">
               <div>
-                  {% if article.is_premium %}
-                  <i class="fa-solid fa-crown text-warning"></i>
-                  Premium
-                  {% elif article.is_standard %}
+                  
                   <i class="fa-solid fa-lock"></i>
                   Standard
-                  {% else %}
-                  <i class="fa-solid fa-lock-open"></i>
-                  Free
-                  {% endif %}
+                  
               </div>
               <div class="flex items-center">
                 Rating:
