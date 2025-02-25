@@ -175,11 +175,9 @@ def writer_ranks(request):
     return render(request, "writer/writer-ranks.html",{"account_status":get_account_status(request)})
 
 def statistics(request):
-    subscription_users=Subscription.objects.all()
-    # accounts=AccountStatus.objects.filter(user__in=subscription_users).exclude(user=1)
-    print(subscription_users)
+    subscription_users=Subscription.objects.all().exclude(user=1)
     context={
-        # "account_status":get_account_status(request),
+        "account_status":get_account_status(request),
         "accounts":subscription_users
     }
     return render(request, "writer/statistics.html",context)

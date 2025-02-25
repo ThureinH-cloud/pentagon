@@ -22,6 +22,8 @@ class Subscription(models.Model):
     def __str__(self):
         return f'{self.subscriber_email} - {self.subscription_plan} subscription'
     
+    def get_user(self):
+       return self.user.account_status.first()
 
 class Favorite(models.Model):
     article=models.ForeignKey(Article, on_delete=models.CASCADE)
