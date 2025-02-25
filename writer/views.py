@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Article
 from .forms import ArticleForm, StandardArticleForm,PremiumArticleForm,ArticleCollectionForm
 from account.models import AccountStatus
+from reader.models import Subscription
 # Create your views here.
 def get_account_status(request):
     account_status = AccountStatus.objects.get(user=request.user)
@@ -174,7 +175,11 @@ def writer_ranks(request):
     return render(request, "writer/writer-ranks.html",{"account_status":get_account_status(request)})
 
 def statistics(request):
+    subscription_users=Subscription.objects.all()
+    # accounts=AccountStatus.objects.filter(user__in=subscription_users).exclude(user=1)
+    print(subscription_users)
     context={
-        "account_status":get_account_status(request),
+        # "account_status":get_account_status(request),
+        "accounts":subscription_users
     }
     return render(request, "writer/statistics.html",context)

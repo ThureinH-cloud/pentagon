@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'crispy_daisyui',
     'django_recaptcha',
     'fontawesomefree',
-    'channels'
+    'channels',
+    
 ]
 CHANNEL_LAYERS = {
     'default': {
