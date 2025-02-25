@@ -172,3 +172,9 @@ def rank_locked(request):
 @login_required(login_url="sign-in")
 def writer_ranks(request):
     return render(request, "writer/writer-ranks.html",{"account_status":get_account_status(request)})
+
+def statistics(request):
+    context={
+        "account_status":get_account_status(request),
+    }
+    return render(request, "writer/statistics.html",context)

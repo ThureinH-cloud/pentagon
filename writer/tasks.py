@@ -24,7 +24,7 @@ def update_user_rank():
                 
             user_metrics = total_views / total_articles 
             
-            print(f"{user.username} | Total Views: {total_views}, Total Articles: {total_articles}")
+            print(f"{user.username} Total Views: {total_views}, Total Articles: {total_articles}")
             print(f"User Metrics: {user_metrics}")
 
             account_status = AccountStatus.objects.get(user=user)

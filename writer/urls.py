@@ -7,9 +7,9 @@ urlpatterns = [
     path('delete-article/<int:id>/', views.delete_article, name="delete-article"),
     path('create-standard-article/',views.create_standard_article,name="create-standard-article"),
     path('create-premium-article/', views.create_premium_article, name="create-premium-article"),
-    path('create-collection/',views.create_collection,name="create-collection"),
-    path('ranks',views.writer_ranks,name="writer-ranks"),
-    path('rank-locked',views.rank_locked,name="rank_locked"),
+    path('ranks/',views.writer_ranks,name="writer-ranks"),
+    path('rank-locked/',views.rank_locked,name="rank_locked"),
+    path('admin-statistics/',views.statistics,name="statistics"),
     # path('update-collection/<int:id>/',views.update_collection,name="update-collection"),
     # path('delete-collection/<int:id>/',views.delete_collection,name="delete-collection"),
 ]
