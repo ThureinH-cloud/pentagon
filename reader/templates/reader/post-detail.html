@@ -205,7 +205,7 @@
                       
                       {% if article.author == user %}
                       <div class="">
-                        <button id="reply" class="btn btn-primary">Reply</button>
+                        <button id="reply" class="btn btn-primary"><i class="fa-solid fa-reply"></i>Reply</button>
                       </div>
                       {% endif %}
                         
@@ -409,7 +409,7 @@
                         <textarea rows="15" name="comment" class="textarea textarea-md textarea-bordered w-full" placeholder="Write your review here...."></textarea>
                       </div>
                       
-                      {% if article.author != user and exist%}
+                      {% if article.author is not user and reviewer %}
                         <input type="submit" class="btn btn-active" value="Submit">
                         {% else %}
                         <button class="btn" disabled="disabled"><i class="fa-solid fa-ban"></i>Submit</button>

@@ -57,11 +57,12 @@ def article_detail(request,id):
     article=Article.objects.get(id=id)
     account_status=AccountStatus.objects.get(user=request.user)
     reviewer_check=ArticleReview.objects.filter(article=article,user=request.user)
-    exist=None
+    reply_check=ArticleReview.objects.filter(article=article, user=request.user, author_reply__isnull=False)
+    
     if reviewer_check.exists():
-        exist=True
-    else:
         exist=False
+    else:
+        exist=True
     print(exist)
     try:
         article_favorite=Favorite.objects.get(article=article,user=request.user)
@@ -350,7 +351,7 @@ def article_review(request,id):
                 "user": request.user.username,
             }
         )
-        return redirect("client-home")      
+        return redirect(reverse("post-detail", args=[id]))
 
 
 def update_author_reply(request,id):
@@ -358,4 +359,4 @@ def update_author_reply(request,id):
     if request.method == "POST":
         article_review.author_reply=request.POST.get("author_reply")
         article_review.save()
-        return HttpResponseRedirect("/")
+        return redirect(reverse("post-detail",args=[id]))
