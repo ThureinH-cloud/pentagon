@@ -12,6 +12,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.contrib.auth.models import User
 from django.contrib.auth.models import User
+from django.urls import reverse
 # Create your views here.
 
 def get_account_status(request):
@@ -55,7 +56,13 @@ def client_home(request):
 def article_detail(request,id):
     article=Article.objects.get(id=id)
     account_status=AccountStatus.objects.get(user=request.user)
-    recent_article=RecentArticle.objects.update_or_create(article=article,user=request.user)
+    reviewer_check=ArticleReview.objects.filter(article=article,user=request.user)
+    exist=None
+    if reviewer_check.exists():
+        exist=True
+    else:
+        exist=False
+    print(exist)
     try:
         article_favorite=Favorite.objects.get(article=article,user=request.user)
     except:
@@ -94,6 +101,7 @@ def article_detail(request,id):
         'article_reviews':article_reviews,
         'user_favorites':user_favorites,
         'article_favorite':article_favorite,
+        'reviewer':exist
     }
     return render(request, "reader/post-detail.html", context)
 
@@ -315,14 +323,14 @@ def article_favorite(request,id):
     articleObj=Article.objects.get(id=id)
     if request.method == "POST":
         Favorite.objects.create(user=request.user, article=articleObj)
-    return redirect("client-home")
+    return redirect(reverse("post-detail", args=[articleObj.id]))
 
 
 def remove_favorite(request, id):
     article=Article.objects.get(id=id)
     if request.method == "POST":
         Favorite.objects.get(user=request.user, article=article).delete()
-    return redirect("client-home")
+    return redirect(reverse("post-detail",args=[article.id]))
 
 @login_required(login_url="sign-in")
 def article_review(request,id):
