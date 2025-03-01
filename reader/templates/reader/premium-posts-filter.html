@@ -284,7 +284,7 @@
   document.getElementById('applyFilterBtn').addEventListener('click', function(e) {
     e.preventDefault()
     var selectedValue = document.getElementById('postFilter').value;
-    var newUrl = '/reader/standard-posts/subscription-posts/?select=' + encodeURIComponent(selectedValue);
+    var newUrl = '/reader/premium-posts/subscription-posts/?select=' + encodeURIComponent(selectedValue);
         $.ajax({
         url: newUrl,  
         type: 'GET',

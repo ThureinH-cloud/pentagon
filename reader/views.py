@@ -163,6 +163,8 @@ def subscription_posts(request):
 @login_required(login_url="sign-in")
 def premium_subscription_posts(request):
     param=request.GET.get("select")
+    recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
+
     try:
         Subscription.objects.get(user=request.user,is_active=True)
     except Subscription.DoesNotExist:
@@ -176,12 +178,15 @@ def premium_subscription_posts(request):
     context={
         "articles":articles,
         "param":param,
+        "recent_articles":recent_articles,
         "account_status":get_account_status(request)
     }
-    return render(request, "reader/subscription-posts-filter.html", context)
+    return render(request, "reader/premium-posts-filter.html", context)
 
 @login_required(login_url="sign-in")
 def premium_posts(request):
+    recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
+
     try:
         sub_user=Subscription.objects.get(user=request.user,is_active=True)
     except Subscription.DoesNotExist:
@@ -190,13 +195,12 @@ def premium_posts(request):
         articles=Article.objects.filter(is_premium=True).select_related("author")
         authors=AccountStatus.objects.filter(user__in=articles.values("author"))
         categories=Article.objects.filter(is_premium=True).values("category")
-        recent_posts=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
         context={
             "articles":articles,
             "account_status":get_account_status(request),
             "authors":authors,
             "categories":categories,
-            "recent_posts":recent_posts
+            "recent_articles":recent_articles
         }
         return render(request, "reader/premium-posts.html", context)
     else:
@@ -301,14 +305,17 @@ def tab(request):
     recent_posts=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
     if "Latest" in param:
         articles=Article.objects.all().order_by("-posted_at")
+        categories=articles.values("category").distinct()
         authors=User.objects.filter(id__in=articles.values("author"))
         accounts=AccountStatus.objects.filter(user__in=authors)
     elif "Highest" in param:
         articles=Article.objects.annotate(avg_rating=Avg('article_review__rating')).order_by("-avg_rating")
+        categories=articles.values("category").distinct()
         authors=User.objects.filter(id__in=articles.values("author"))
         accounts=AccountStatus.objects.filter(user__in=authors)
     else:
         articles=Article.objects.annotate(favorite_count=Count('favorite__article')).order_by("-favorite_count")
+        categories=articles.values("category").distinct()
         authors=User.objects.filter(id__in=articles.values("author"))
         accounts=AccountStatus.objects.filter(user__in=authors)
     context={
@@ -316,7 +323,8 @@ def tab(request):
         "param":param,
         "account_status":get_account_status(request),
         "recent_posts":recent_posts,
-        "accounts":accounts
+        "accounts":accounts,
+        "categories":categories
     }
     return render(request, "reader/select-tab.html",context)
 
