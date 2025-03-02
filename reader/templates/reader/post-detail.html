@@ -409,7 +409,7 @@
                         <textarea rows="15" name="comment" class="textarea textarea-md textarea-bordered w-full" placeholder="Write your review here...."></textarea>
                       </div>
                       
-                      {% if article.author is not user and reviewer %}
+                      {% if article.author != user and reviewer %}
                         <input type="submit" class="btn btn-active" value="Submit">
                         {% else %}
                         <button class="btn" disabled="disabled"><i class="fa-solid fa-ban"></i>Submit</button>

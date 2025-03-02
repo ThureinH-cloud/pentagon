@@ -47,6 +47,7 @@ def client_home(request):
         'categories':categories,
         "page_objects":page_object,
         "recent_articles":recent_articles,
+        "articles":articles,
         "show_spinner":True
     }
     return render(request, "reader/home.html",context)
@@ -143,19 +144,31 @@ def standard_posts(request):
 @login_required(login_url="sign-in")
 def subscription_posts(request):
     param=request.GET.get("select")
+    recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
+
     try:
         Subscription.objects.get(user=request.user,is_active=True)
     except Subscription.DoesNotExist:
         return redirect("subscription-locked")
     if "Latest" in param:
         articles=Article.objects.filter(is_standard=True).order_by("-posted_at")
+        categories=articles.values("category").distinct()
+        authors=AccountStatus.objects.filter(user__in=articles.values("author"))
+        
     elif "Highest" in param:
         articles=Article.objects.filter(is_standard=True).annotate(avg_rating=Avg('article_review__rating')).order_by("-avg_rating")
+        categories=articles.values("category").distinct()
+        authors=AccountStatus.objects.filter(user__in=articles.values("author"))
     elif "Most Favorite" in param:
         articles=Article.objects.filter(is_standard=True).annotate(favorite_count=Count('favorite__article')).order_by("-favorite_count")
+        categories=articles.values("category").distinct()
+        authors=AccountStatus.objects.filter(user__in=articles.values("author"))
     context={
         "articles":articles,
         "param":param,
+        "recent_articles":recent_articles,
+        "categories":categories,
+        "authors":authors,
         "account_status":get_account_status(request)
     }
     return render(request, "reader/subscription-posts-filter.html", context)

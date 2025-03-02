@@ -12,7 +12,7 @@
           <div class="card">
               <div class="card-body">
                  <div class="flex justify-between items-center">
-                  <p class="text-xl">Standard Posts</p>
+                  <p class="text-xl">{{param|upper}} - Premium</p>
                   <div class="flex w-80">
                     <div class="flex w-80">
                       <select name="select" id="postFilter" class="select select-bordered w-full max-w-xs ">
@@ -74,8 +74,8 @@
             </div>
             <div class="flex justify-between items-center mt-2">
               <div>
-                <i class="fa-solid fa-lock"></i>
-                        Standard
+                <i class="fa-solid fa-crown text-warning"></i> Premium
+
               </div>
               <div class="flex items-center">
                 Rating:
@@ -288,9 +288,7 @@
         $.ajax({
         url: newUrl,  
         type: 'GET',
-        
         success: function(response) {
-           
             window.open(newUrl,'_self')
             history.replaceState(null, '', newUrl);
         },

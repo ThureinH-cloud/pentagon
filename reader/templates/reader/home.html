@@ -73,7 +73,7 @@
                                     src="{{article.get_account_status.profile.url}}" />
                                 </div>
                               </div>
-                              <h2 class="mx-4">{{article.get_author_name}}</h2>
+                              <h2 class="mx-2">{{article.get_author_name}}</h2>
                         </div>
                     </div>
                   </div>
@@ -311,9 +311,9 @@
                           Categories
                           <div class="card bg-base-100 w-96 shadow-xl">
                               <div class="card-body">
-                                 {% for category in categories %}
+                                 {% for category in articles %}
                                  <div class="flex-row flex items-center">
-                                       <h2 class="mx-3 text-lg">- <a href="{% url 'category' category.category  %}" class="link">{{category.category}}</a></h2> 
+                                       <h2 class="mx-3 text-lg">- <a href="{% url 'category' category.category  %}" class="link">{{category.category}} </a>({{category.get_article_count_by_category}})</h2> 
                                  </div>
                                  {% endfor %}
                                   
