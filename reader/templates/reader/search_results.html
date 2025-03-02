@@ -12,12 +12,25 @@
                  <div class="flex justify-between items-center">
                   <p class="text-xl">You search for {{query}}</p>
                   <div class="flex w-80">
-                    <select id="postFilter" class="select select-bordered w-full max-w-xs ">
-                      <option  selected>Latest Posts</option>
-                      <option>Highest Rated</option>
-                      <option>Most Favorite</option>
+                    <select name="select" id="postFilter" class="select select-bordered w-full max-w-xs border-primary">
+                      <option 
+                      {% if "Latest Posts" in param %}
+                        selected
+                      {% endif %}
+                         >Latest Posts</option>
+                      <option
+                      {% if "Highest Rated" in param %}
+                        selected
+                      {% endif %}
+                      >Highest Rated</option>
+                      <option
+                      {% if "Most Favorite" in param %}
+                        selected
+                      {% endif %}
+                        
+                      >Most Favorite</option>
                     </select>
-                    <button id="applyFilterBtn" class="btn btn-active ml-2">Apply</button>
+                    <button id="applyFilterBtn" class="btn btn-active ml-2">Filter <i class="fa-solid fa-filter"></i></button>
                   </div>
                  </div>
                  {% for article in results %}
@@ -247,8 +260,6 @@
                                <h2 class="mx-2 text-lg">{{account.user.username}}</h2> 
                          </div>
                          {% endfor %}
-                          
-                        
                       </div>
                     </div>
                 </div>
@@ -259,7 +270,7 @@
                     Categories
                     <div class="card bg-base-100 w-96 shadow-xl">
                         <div class="card-body">
-                           {% for category in categories %}
+                           {% for category in results %}
                            <div class="flex-row flex items-center">
                                  <h2 class="mx-4 text-lg">- <a href="{% url 'category' category.category  %}" class="link">{{category.category}}</a></h2> 
                            </div>
@@ -291,5 +302,27 @@
 
 </div>
 </div> -->
-    
+<script>
+// Get the current URL
+let currentUrl = new URL(window.location.href);
+// Add or update a query parameter
+document.getElementById('applyFilterBtn').addEventListener('click', function(e) {
+  e.preventDefault()
+  var selectedValue = document.getElementById('postFilter').value;
+  currentUrl.searchParams.set("select", selectedValue);
+  var newUrl = currentUrl.toString();
+      $.ajax({
+      url: newUrl,  
+      type: 'GET',  
+      success: function(response) {
+          window.open(newUrl,'_self')
+          history.replaceState(null, '', newUrl);
+      },
+      error: function(xhr, status, error) {
+        console.log(error)
+      }
+      });
+});
+
+</script>
 {% endblock  %}

@@ -24,13 +24,16 @@ def client_home(request):
 
     query=request.GET.get("search","")
     if query:
+        param=request.GET.get("select","")
         articles=Article.objects.filter(title__icontains=query)
         authors=AccountStatus.objects.filter(user__in=articles.values("author"))
+        categories=articles.values("category").distinct()
         context={
             "results":articles,
             "recent_articles":recent_articles,
             "authors":authors,
             "account_status":get_account_status(request),
+            "param":param,
             "query":query
         }
         return render(request,"reader/search_results.html",context)
@@ -115,7 +118,6 @@ def standard_posts(request):
         sub_user=Subscription.objects.get(user=request.user,is_active=True)
     except Subscription.DoesNotExist:
         return redirect("subscription-locked")
-    
     if sub_user.subscription_plan == 'Premium' or 'Standard':
         articles=Article.objects.filter(is_standard=True)
         article_standard_authors=Article.objects.filter(is_standard=True).values('author')
@@ -124,6 +126,7 @@ def standard_posts(request):
         recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
         query=request.GET.get("search","")
         if query:
+            param=request.GET.get("select","")
             articles=Article.objects.filter(title__icontains=query)
             authors=AccountStatus.objects.filter(user__in=articles.values("author"))
             print(articles)
@@ -131,7 +134,9 @@ def standard_posts(request):
                 "results":articles,
                 "recent_articles":recent_articles,
                 "authors":authors,  
-                "query":query
+                "query":query,
+                "param":param,
+                "account_status":get_account_status(request)
             }
             return render(request,"reader/search_results.html",context)
         context={
