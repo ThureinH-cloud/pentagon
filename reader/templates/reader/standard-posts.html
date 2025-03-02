@@ -49,7 +49,7 @@
                               src="{{article.get_account_status.profile.url}}" />
                           </div>
                         </div>
-                        <h2 class="mx-4">{{article.get_author_name}}</h2>
+                        <h2 class="mx-2">{{article.get_author_name}}</h2>
                   </div>
               </div>
             </div>
@@ -231,7 +231,19 @@
                                 <img src="{{account.profile.url}}" />
                               </div>
                             </div>
-                               <h2 class="mx-4 text-lg">{{account.user.username}}</h2> 
+                            <h2 class="mx-2 text-lg flex items-center">{{account.user.username}}
+
+                              {% if account.rank == "Platinum" %}
+                             <i class="fa-solid fa-trophy text-warning ml-1"></i>
+
+                             {% elif account.rank == "Gold" %}
+                             <i class="fa-solid fa-award  text-yellow-600	ml-1"></i>
+
+                             {% else %}
+                             <i class="fa-solid fa-medal ml-1"></i>
+
+                             </h2> 
+                             {% endif %}
                          </div>
                          {% endfor %}
                           
@@ -248,7 +260,7 @@
                         <div class="card-body">
                            {% for category in categories %}
                            <div class="flex-row flex items-center">
-                                 <h2 class="mx-4 text-lg">- <a href="{% url 'category' category.category  %}" class="link">{{category.category}}</a></h2> 
+                                 <h2 class="mx-2 text-lg">- <a href="{% url 'category' category.category  %}" class="link">{{category.category}}</a></h2> 
                            </div>
                            {% endfor %}
                             

@@ -1,6 +1,6 @@
 {% extends 'reader/base.html' %}
 {% block title %}
-  
+  You search for {{query}} - Pentagon
 {% endblock  %}
 {% block content %}
   
@@ -49,7 +49,7 @@
                                        src="{{article.get_account_status.profile.url}}" />
                                    </div>
                                  </div>
-                                 <h2 class="mx-4">{{article.get_author_name}}</h2>
+                                 <h2 class="mx-2">{{article.get_author_name}}</h2>
                            </div>
                        </div>
                      </div>
@@ -220,10 +220,10 @@
                   Recent Posts
                   <div class="card bg-base-100 w-96 shadow-xl">
                       <div class="card-body">
-                         {% for article in articles %}
+                         {% for article in recent_articles %}
                          <div class="flex-row flex items-center">
-                         
-                               <h2 class="mx-4">- <a href="" class="link">{{article.category}}</a></h2> 
+                          <h2 class="mx-3">- <a href="{% url 'post-detail' article.article.id %}" class="link">{{article.article}}</a></h2> 
+
                          </div>
                          {% endfor %}
                           
@@ -237,14 +237,14 @@
                   Authors
                   <div class="card bg-base-100 w-96 shadow-xl">
                       <div class="card-body">
-                         {% for account in accounts %}
+                         {% for account in authors %}
                          <div class="flex-row flex items-center">
                           <div class="avatar">
                               <div class="w-10 rounded-full">
                                 <img src="{{account.profile.url}}" />
                               </div>
                             </div>
-                               <h2 class="mx-4 text-lg">{{account.user.username}}</h2> 
+                               <h2 class="mx-2 text-lg">{{account.user.username}}</h2> 
                          </div>
                          {% endfor %}
                           

@@ -25,10 +25,12 @@ def client_home(request):
     query=request.GET.get("search","")
     if query:
         articles=Article.objects.filter(title__icontains=query)
-        print(articles)
+        authors=AccountStatus.objects.filter(user__in=articles.values("author"))
         context={
             "results":articles,
             "recent_articles":recent_articles,
+            "authors":authors,
+            "account_status":get_account_status(request),
             "query":query
         }
         return render(request,"reader/search_results.html",context)
@@ -123,10 +125,12 @@ def standard_posts(request):
         query=request.GET.get("search","")
         if query:
             articles=Article.objects.filter(title__icontains=query)
+            authors=AccountStatus.objects.filter(user__in=articles.values("author"))
             print(articles)
             context={
                 "results":articles,
                 "recent_articles":recent_articles,
+                "authors":authors,  
                 "query":query
             }
             return render(request,"reader/search_results.html",context)
