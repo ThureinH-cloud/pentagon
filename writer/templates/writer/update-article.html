@@ -1,6 +1,9 @@
 {% extends 'writer/writer-dashboard.html' %}
 {% load daisyui_filters %}
 {% load crispy_forms_tags %}
+{% block title %}
+  Edit {{article.title}} - Pentagon
+{% endblock  %}
 {% block writer %}
 <div class="w-full">
   <div class="grid grid-cols-6 gap-4">

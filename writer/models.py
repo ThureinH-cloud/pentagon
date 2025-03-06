@@ -91,3 +91,9 @@ class RecentArticle(models.Model):
     created_at=models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.user.username + " - " + self.article.title
+
+class UserNotification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    has_new_comment = models.BooleanField(default=False)
+    def __str__(self):
+        return self.user.username + " -  Has Comment" 

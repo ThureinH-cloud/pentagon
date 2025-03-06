@@ -1,8 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
-from .models import Article
-from .forms import ArticleForm, StandardArticleForm,PremiumArticleForm,ArticleCollectionForm
+from .models import Article,UserNotification
+from .forms import ArticleForm, StandardArticleForm,PremiumArticleForm
 from account.models import AccountStatus
 from reader.models import Subscription
 # Create your views here.
@@ -13,6 +13,8 @@ def get_account_status(request):
 def writer_dashboard(request):
     current_user=request.user
     user_rank=AccountStatus.objects.get(user=current_user)
+    user_notifications=UserNotification.objects.filter(user=current_user).count()
+    
     try:
         articles=Article.objects.all().filter(author=current_user).order_by("-posted_at")
     except Article.DoesNotExist:
@@ -20,6 +22,7 @@ def writer_dashboard(request):
     context={
         "articles":articles,
         "user_rank":user_rank,
+        "user_notifications":user_notifications,
         "account_status":get_account_status(request)
     }
     return render(request, "writer/writer-dashboard.html", context)
@@ -149,7 +152,8 @@ def update_article(request,id):
     # }
     context={
         "article":article,
-        "categories":categories
+        "categories":categories,
+        "account_status":get_account_status(request),
     }
     return render(request, "writer/update-article.html",context)
 
@@ -158,13 +162,6 @@ def delete_article(request, id):
     article=Article.objects.get(id=id)
     article.delete()
     return redirect("writer-dashboard")
-
-def create_collection(request):
-    article_collection_form=ArticleCollectionForm(instance=request.user)
-    context={
-        "form":article_collection_form
-    }
-    return render(request, "writer/create-collection.html",context)
 
 @login_required(login_url="sign-in")
 def rank_locked(request):
@@ -181,3 +178,6 @@ def statistics(request):
         "accounts":subscription_users
     }
     return render(request, "writer/statistics.html",context)
+
+def check_comments(request):
+    pass

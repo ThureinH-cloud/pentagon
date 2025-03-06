@@ -10,6 +10,7 @@ urlpatterns = [
     path('ranks/',views.writer_ranks,name="writer-ranks"),
     path('rank-locked/',views.rank_locked,name="rank_locked"),
     path('admin-statistics/',views.statistics,name="statistics"),
+    path('check-comments/',views.check_comments,name="check-comments")
     # path('update-collection/<int:id>/',views.update_collection,name="update-collection"),
     # path('delete-collection/<int:id>/',views.delete_collection,name="delete-collection"),
 ]

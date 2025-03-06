@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Subscription,Favorite
 from account.models import AccountStatus
-from writer.models import Article,ArticleReview,RecentArticle
+from writer.models import Article,ArticleReview,RecentArticle,UserNotification
 from django.contrib import messages
 from .paypal import get_access_token,cancel_subscription, get_subscription_details,update_subscription_plan
 from django.db.models import Avg,Count
@@ -13,6 +13,7 @@ from asgiref.sync import async_to_sync
 from django.contrib.auth.models import User
 from django.contrib.auth.models import User
 from django.urls import reverse
+
 # Create your views here.
 
 def get_account_status(request):
@@ -371,6 +372,7 @@ def article_review(request,id):
         rating=request.POST.get("rating")
         if rating is None:
             rating=0
+        UserNotification.objects.create(user=article.author, has_new_comment=True)
         ArticleReview.objects.create(user=request.user, article=article, comment=comment, rating=rating) 
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
