@@ -388,8 +388,9 @@ def article_review(request,id):
 
 
 def update_author_reply(request,id):
-    article_review=ArticleReview.objects.get(article=id)
+    article_review=ArticleReview.objects.get(id=id)
+    article=Article.objects.filter(article_review=article_review).first()
     if request.method == "POST":
         article_review.author_reply=request.POST.get("author_reply")
         article_review.save()
-        return redirect(reverse("post-detail",args=[id]))
+        return redirect(reverse("post-detail",args=[article.id]))
