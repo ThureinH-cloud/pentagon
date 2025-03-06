@@ -252,17 +252,21 @@
                     </form>
                   </div>
                   <div class="card">
-                    
                     <div class="card-body">
                         Recent Posts
                         <div class="card bg-base-100 w-96 shadow-xl">
                             <div class="card-body">
-                               {% for article in recent_articles %}
-                               <div class="flex-row flex items-center">
                                
-                                     <h2 class="mx-3">- <a href="{% url 'post-detail' article.article.id %}" class="link">{{article.article}}</a></h2> 
-                               </div>
-                               {% endfor %}
+                               {% if recent_articles %}
+                                {% for article in recent_articles %}
+                                <div class="flex-row flex items-center">
+                                      <h2 class="mx-3">- <a href="{% url 'post-detail' article.article.id %}" class="link">{{article.article}}</a></h2> 
+                                </div>
+                                {% endfor %}
+                                {% else %}
+                                  <p class="text-center">No Recent Posts Here.</p>
+                               {% endif %}
+                                
                                 
                               
                             </div>

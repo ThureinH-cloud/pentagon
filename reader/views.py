@@ -109,7 +109,8 @@ def article_detail(request,id):
         'article_reviews':article_reviews,
         'user_favorites':user_favorites,
         'article_favorite':article_favorite,
-        'reviewer':exist
+        'reviewer':exist,
+        "reply_check":reply_check,
     }
     return render(request, "reader/post-detail.html", context)
 
