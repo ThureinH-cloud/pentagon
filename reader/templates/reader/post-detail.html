@@ -410,7 +410,7 @@
                       </div>
                       
                       {% if article.author != user and reviewer %}
-                        <input type="submit" class="btn btn-active" value="Submit">
+                        <button class="btn btn-active"><i class="fa-solid fa-comment"></i>Submit</button>
                         {% else %}
                         <button class="btn" disabled="disabled"><i class="fa-solid fa-ban"></i>Submit</button>
                       {% endif %}

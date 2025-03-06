@@ -74,7 +74,7 @@ class ArticleReview(models.Model):
     def get_commenter(self):
         return self.user.account_status.first()
     def __str__(self):
-        return self.article.title
+        return self.comment
     
 
 class ArticleCollection(models.Model):
