@@ -205,14 +205,21 @@
                       
                       {% if article.author == user %}
                       <div class="">
-                        <button id="reply" class="btn btn-primary"><i class="fa-solid fa-reply"></i>Reply</button>
+                          
+                          {% if article_rev.comment and article_rev.author_reply %}
+                            <p></p>
+                            {% else %}
+                            <button id="reply" class="btn btn-primary"><i class="fa-solid fa-reply"></i>Reply</button>                          
+
+                          {% endif %}
+                            
                       </div>
                       {% endif %}
                         
                     </div>
                     
                     <div class="pl-12 my-4">
-                      <p class="text-center flex self-start">{{article_rev.comment}}</p>
+                      <p class="text-center flex self-start mb-2">{{article_rev.comment}}</p>
                       
                       {% if article_rev.author_reply is not None %}
                       <div class="flex items-center">
@@ -226,7 +233,7 @@
                             
                         </div>
                         <div class="">
-                          {{article.author}}
+                          {{article.author}} (Author)
                           <br>
                         </div>
 

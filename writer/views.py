@@ -9,12 +9,13 @@ from reader.models import Subscription
 def get_account_status(request):
     account_status = AccountStatus.objects.get(user=request.user)
     return account_status
+def user_notifications(request):
+    user_notifications=UserNotification.objects.filter(user=request.user).count()
+    return user_notifications
 @login_required(login_url="sign-in")
 def writer_dashboard(request):
     current_user=request.user
     user_rank=AccountStatus.objects.get(user=current_user)
-    user_notifications=UserNotification.objects.filter(user=current_user).count()
-    
     try:
         articles=Article.objects.all().filter(author=current_user).order_by("-posted_at")
     except Article.DoesNotExist:
@@ -22,7 +23,7 @@ def writer_dashboard(request):
     context={
         "articles":articles,
         "user_rank":user_rank,
-        "user_notifications":user_notifications,
+        "user_notifications":user_notifications(request),
         "account_status":get_account_status(request)
     }
     return render(request, "writer/writer-dashboard.html", context)
@@ -47,6 +48,7 @@ def create_article(request):
     context={
         "categories":Article.CATEGORY_CHOICES,
         "account_status":get_account_status(request),
+        "user_notifications":user_notifications(request),
         "form":article_form
     }
     return render(request, "writer/create-article.html",context)
@@ -68,7 +70,8 @@ def create_standard_article(request):
         context={
             "form":form,
             "categories":categories,
-            "account_status":get_account_status(request)
+            "account_status":get_account_status(request),
+            "user_notifications":user_notifications(request)
         }
     else:
         return redirect("writer-ranks")
@@ -180,4 +183,7 @@ def statistics(request):
     return render(request, "writer/statistics.html",context)
 
 def check_comments(request):
-    pass
+    context={
+        "account_status":get_account_status(request)
+        }
+    return render(request, "writer/check-comments.html",context)
