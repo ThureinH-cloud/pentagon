@@ -45,7 +45,6 @@ def client_home(request):
     users=User.objects.all()
     authors=Article.objects.filter(author__in=users).values('author').distinct()
     accounts=AccountStatus.objects.filter(user__in=authors)
-    print(accounts)
     categories=Article.objects.values('category').distinct()
     context={
         'account_status':get_account_status(request),

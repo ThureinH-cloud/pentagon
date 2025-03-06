@@ -3,7 +3,7 @@
   Subscription Success - Pentagon
 {% endblock  %}
 {% block content %}
-<div class=" bg-base-200 min-h-screen">
+<div class=" bg-base-200 min-h-screen mt-4">
       <div class="flex justify-center">
         <div class="max-w-md">
          
@@ -13,7 +13,13 @@
                   <div class="flex justify-center">
                       <h3 class="uppercase">Subscription UnLocked</h3>
                   </div>
-                  <p class="text-sm my-5">You can browse {{SubscriptionPlan}} articles </p>
+                  <p class="text-sm my-5">You can access 
+                  {% if SubscriptionPlan == "Premium" %}
+                    Full
+                    {% else %}
+                    Standard
+                  {% endif %}
+                     articles </p>
                   <a href="{% url 'client-home' %}" class="btn btn-active uppercase">Go To Blog</a>
               </div>
             </div>
