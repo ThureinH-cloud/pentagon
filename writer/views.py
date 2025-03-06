@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
-from .models import Article,UserNotification
+from .models import Article,UserNotification,ArticleReview
 from .forms import ArticleForm, StandardArticleForm,PremiumArticleForm
 from account.models import AccountStatus
 from reader.models import Subscription
@@ -183,7 +183,13 @@ def statistics(request):
     return render(request, "writer/statistics.html",context)
 
 def check_comments(request):
+    articles=Article.objects.filter(author=request.user)
+    comments=ArticleReview.objects.filter(article__in=articles)
+    print(comments)
     context={
-        "account_status":get_account_status(request)
+        "account_status":get_account_status(request),
+        "comments":comments,
+        "articles":articles,
+        
         }
     return render(request, "writer/check-comments.html",context)
