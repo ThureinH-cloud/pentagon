@@ -29,7 +29,7 @@ def log_recent_article(user_id, article_id):
 def get_recent_articles(user_id):
     key = f"recent_articles:{user_id}"
     article_ids = cache.get(key, [])
-    return Article.objects.filter(id__in=article_ids)
+    return Article.objects.filter(id__in=article_ids)[:5]
 
 def get_account_status(request):
     account_status = AccountStatus.objects.get(user=request.user)
@@ -271,9 +271,10 @@ def category(request,category):
     categories=Article.objects.values("category").distinct()
     authors=Article.objects.filter(category=category).values("author").distinct()
     accounts=AccountStatus.objects.filter(user__in=authors)
-    recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
+    recent_articles=get_recent_articles(request.user.id)
 
     context={
+        "count":category_articles.count(),
         "category_articles":category_articles,
         "category":category,
         "categories":categories,

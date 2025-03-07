@@ -10,7 +10,7 @@
           <div class="card">
               <div class="card-body">
                  <div class="flex justify-between items-center">
-                  <p class="text-xl">{{category|upper}}</p>
+                  <p class="text-xl">{{category|upper}} ( {{count}} Posts )</p>
                   <div class="flex w-80">
                     <select id="postFilter" class="select select-bordered w-full max-w-xs ">
                       <option  selected>Latest Posts</option>
@@ -234,7 +234,7 @@
                          {% for article in recent_articles %}
                          <div class="flex-row flex items-center">
                          
-                               <h2 class="mx-4">- <a href="{% url 'post-detail' article.article.id %}" class="link">{{article.article}}</a></h2> 
+                               <h2 class="mx-4">- <a href="{% url 'post-detail' article.id %}" class="link">{{article.title}}</a></h2> 
                          </div>
                          {% endfor %}
                           
