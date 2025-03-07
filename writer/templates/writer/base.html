@@ -35,6 +35,8 @@
           height: 100%;
           background-color: rgba(0, 0, 0, 0.6);
         }
+        
+        
         </style>
 </head>
 <body>
@@ -42,6 +44,13 @@
     <div id="loading-spinner" class="spinner" style="display: none;">
         <span class="loading loading-dots loading-lg" style="position: fixed;top:50%;left:50%;"></span>
     </div>
+    <div id="toast" class="toast toast-top toast-end mr-16 mt-12 animate__fadeInDown" style="display: none;">
+        <div class="alert alert-info">
+          <span>New mail arrived.</span>
+        </div>
+        
+      </div>
+    
     {% block content %}
       
     {% endblock  %}
@@ -52,6 +61,7 @@
           document.getElementById('loading-spinner').style.display = 'none';
         }, 500);
     </script>
+            
     <script>
         const authorId="{{ request.user.id }}"
         const socket = new WebSocket(`ws://localhost:8000/ws/comments/${authorId}/`);
@@ -64,8 +74,14 @@
             const data = JSON.parse(event.data);
             //data.user
             //data.text
+            console.log(data)
+            document.querySelector('.alert span').textContent = `${data.user} commented ${data.text}`;  
+                document.getElementById('toast').style.display = 'block';
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 50000);
+
             
-            console.log(event)
         };
 
         socket.onerror = function(error) {
@@ -75,6 +91,9 @@
         socket.onclose = function() {
             console.log("WebSocket Disconnected!");
         };
+
+
+
 
     </script>
 </body>
