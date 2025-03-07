@@ -68,9 +68,15 @@
                 <form action="{% url 'delete-subscription' user_subscription.paypal_subscription_id %}" method="post">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-error mb-2 text-white" ><i class="fa-solid fa-ban"></i>Deactivate Plan</button>
-                </form>                
+                </form>
+                
+                {% if user_subscription.remaining == 1 %}
+                <a href="{% url 'update-current-subscription' user_subscription.paypal_subscription_id %}" class="btn btn-outline btn-warning hover:text-white"><i class="fa-solid fa-crown text-warning"></i> Update 
+                   Plan</a>
+                {% endif %}
+                                  
                 {% if user_subscription.subscription_plan == "Standard" %}
-                <a href="{% url 'update-subscription' user_subscription.paypal_subscription_id %}" class="btn btn-outline btn-warning hover:text-white"><i class="fa-solid fa-crown text-warning"></i> Update 
+                <a href="{% url 'update-subscription' user_subscription.paypal_subscription_id %}" class="btn btn-outline btn-warning hover:text-white"><i class="fa-solid fa-crown text-warning"></i> Upgrade 
                   Premium Plan</a>
                 {% endif %}
                    

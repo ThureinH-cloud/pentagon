@@ -65,3 +65,28 @@ def update_subscription_plan(access_token, subId):
     if r.status_code == 200:
         return approval_url
     print(response)
+
+def update_current_subscription_plan(access_token, subId):
+    bearer_token = f"Bearer {access_token}"
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': bearer_token,
+    }
+    subDetails=Subscription.objects.get(paypal_subscription_id=subId)
+    current_plan=subDetails.subscription_plan
+    if current_plan == "Standard":
+        new_plan_id="P-38363656RR1276033M6KPIII"
+    elif current_plan == "Premium":
+        new_plan_id="P-2EA74263YC2500708M6KPIXI"
+    url='https://api.sandbox.paypal.com/v1/billing/subscriptions/'+subId+'/revise'
+    data={
+        "plan_id": new_plan_id
+    }
+    r=requests.post(url, headers=headers,data=json.dumps(data))
+    response=r.json()
+    for link in response['links']:
+        if link['rel'] == 'approve':
+            approval_url = link['href']
+    if r.status_code == 200:
+        return approval_url
+    print(response)

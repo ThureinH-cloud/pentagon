@@ -1,10 +1,11 @@
+from datetime import datetime,timedelta
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Subscription,Favorite
 from account.models import AccountStatus
 from writer.models import Article,ArticleReview,RecentArticle,UserNotification
 from django.contrib import messages
-from .paypal import get_access_token,cancel_subscription, get_subscription_details,update_subscription_plan
+from .paypal import get_access_token,cancel_subscription, get_subscription_details,update_subscription_plan,update_current_subscription_plan
 from django.db.models import Avg,Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator
@@ -57,7 +58,7 @@ def client_home(request):
     }
     return render(request, "reader/home.html",context)
 
-    
+
 @login_required(login_url="sign-in")
 def article_detail(request,id):
     article=Article.objects.get(id=id)
@@ -300,6 +301,15 @@ def update_subscription(request,subId):
     else:
         return HttpResponse("Error: Unable to update subscription plan.")
 
+@login_required(login_url="sign-in")
+def update_current_subscription(request,subId):
+    access_token=get_access_token()
+    approve_url=update_current_subscription_plan(access_token, subId)
+    if approve_url:
+        return redirect(approve_url)
+    else:
+        return HttpResponse("Error: Unable to update subscription plan.")
+
 @login_required(login_url='sign-in')
 def subscription_update_success(request):
     return render(request, "reader/subscription-update-success.html")
@@ -315,8 +325,10 @@ def confirm_update_subscription(request):
     if result['plan_id']=="P-2EA74263YC2500708M6KPIXI":
         sub_details.subscription_plan="Premium"
         sub_details.subscription_cost="9.99"
+        sub_details.expires_at=datetime.now()+timedelta(days=30)
         sub_details.save()
         return redirect("subscription-success")
+
     else:
         messages.error(request, "Subscription already exists or invalid data provided.")
         return redirect("subscription-plans")

@@ -14,6 +14,7 @@ urlpatterns = [
     path('delete-subscription/<subId>/',views.delete_subscription,name='delete-subscription'),
     path('deactivate-subscription',views.deactivate_subscription,name="deactivate-subscription"),
     path('update-subscription/<subId>/',views.update_subscription,name="update-subscription"),
+    path('update-current-subscription/<subId>/',views.update_current_subscription,name="update-current-subscription"),
     path('subscription-update-success/', views.subscription_update_success, name="subscription-update-success"),
     path('tab/',views.tab,name="tab"),
     path('standard-posts/subscription-posts/',views.subscription_posts,name="subscription-posts"),

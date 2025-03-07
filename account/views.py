@@ -113,7 +113,5 @@ def create_subscription(request):
     except IntegrityError:
         messages.error(request, "Subscription already exists or invalid data provided.")
         return redirect("home")
-    
 
-    
     return redirect("subscription-success")
