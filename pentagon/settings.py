@@ -29,6 +29,15 @@ DEBUG = True
 # CSRF_TRUSTED_ORIGINS = ['*']
 
 # Application definition
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
 
 INSTALLED_APPS = [
     'daphne',
@@ -196,7 +205,7 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_BROKER_TRANSPORT_OPTIONS = {
     'max_retries': 5,  
     'interval_start': 0,  
-    'interval_step': 2,  
+    'interval_step': 30,  
     'interval_max': 30,  
 }
 

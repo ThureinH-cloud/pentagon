@@ -85,12 +85,7 @@ class ArticleCollection(models.Model):
     def __str__(self):
         return self.article.title
     
-class RecentArticle(models.Model):
-    user=models.ForeignKey(User, on_delete=models.CASCADE)
-    article=models.ForeignKey(Article, on_delete=models.CASCADE)
-    created_at=models.DateTimeField(auto_now=True)
-    def __str__(self):
-        return self.user.username + " - " + self.article.title
+
 
 class UserNotification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

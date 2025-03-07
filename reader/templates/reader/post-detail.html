@@ -447,7 +447,7 @@
                         {% if user_favorites  %}
                          {% for favorite in user_favorites %}
                          <div class="flex-row flex items-center">
-                            <h2 class="mx-4">- <a href="" class="link">{{favorite.article}}</a></h2> 
+                            <h2 class="mx-4">- <a href="{% url 'post-detail' favorite.article.id %}" class="link">{{favorite.article}}</a></h2> 
                          </div>
                          {% endfor %}
                          {% else %}

@@ -3,7 +3,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Subscription,Favorite
 from account.models import AccountStatus
-from writer.models import Article,ArticleReview,RecentArticle,UserNotification
+from writer.models import Article,ArticleReview,UserNotification
 from django.contrib import messages
 from .paypal import get_access_token,cancel_subscription, get_subscription_details,update_subscription_plan,update_current_subscription_plan
 from django.db.models import Avg,Count
@@ -14,16 +14,31 @@ from asgiref.sync import async_to_sync
 from django.contrib.auth.models import User
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.core.cache import cache
 
 # Create your views here.
+
+def log_recent_article(user_id, article_id):
+    key = f"recent_articles:{user_id}"
+    recent_articles = cache.get(key, [])
+    if article_id in recent_articles:
+        recent_articles.remove(article_id)
+    recent_articles.insert(0, article_id)
+    cache.set(key, recent_articles[:5], timeout=86400)
+
+def get_recent_articles(user_id):
+    key = f"recent_articles:{user_id}"
+    article_ids = cache.get(key, [])
+    return Article.objects.filter(id__in=article_ids)
 
 def get_account_status(request):
     account_status = AccountStatus.objects.get(user=request.user)
     return account_status
+
 @login_required(login_url="sign-in")
 def client_home(request):
-    recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
-
+    recent_articles = get_recent_articles(request.user.id)
+    print(recent_articles)
     query=request.GET.get("search","")
     if query:
         param=request.GET.get("select","")
@@ -65,7 +80,7 @@ def article_detail(request,id):
     account_status=AccountStatus.objects.get(user=request.user)
     reviewer_check=ArticleReview.objects.filter(article=article,user=request.user)
     reply_check=ArticleReview.objects.filter(article=article, user=request.user, author_reply__isnull=False)
-    
+    log_recent_article(request.user.id, article.id)
     if reviewer_check.exists():
         exist=False
     else:
