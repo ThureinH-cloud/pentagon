@@ -12,6 +12,7 @@ def get_account_status(request):
 def user_notifications(request):
     user_notifications=UserNotification.objects.filter(user=request.user).count()
     return user_notifications
+
 @login_required(login_url="sign-in")
 def writer_dashboard(request):
     current_user=request.user

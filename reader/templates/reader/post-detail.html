@@ -49,7 +49,10 @@
                       </form>
                     {% endif %}  
                     {% else %}
-                    <button class="btn" disabled="disabled"><i class="fa-solid fa-ban"></i>Add Favorite</button>
+                    <div class="tooltip" data-tip="You Cannot add Favorite Your Post.">
+                      <button class="btn btn-active" ><i class="fa-solid fa-ban"></i>Add Favorite</button>
+                    </div>
+                    
 
                     {% endif %}
                       
@@ -425,11 +428,15 @@
                       
                       {% if article.author != user and reviewer %}
                         <button class="btn btn-active"><i class="fa-solid fa-comment"></i>Submit</button>
+                      </form>
                         {% else %}
-                        <button class="btn" disabled="disabled"><i class="fa-solid fa-ban"></i>Submit</button>
-                      {% endif %}
+                        <div class="tooltip" data-tip="You cannot review your post.">
+                          <button class="btn btn-active"><i class="fa-solid fa-ban"></i>Submit</button>
+                         
+                        </div>
+                        {% endif %}
                         
-                    </form>
+                   
                   </div>
                      
                   

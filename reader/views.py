@@ -7,7 +7,7 @@ from writer.models import Article,ArticleReview,UserNotification
 from django.contrib import messages
 from .paypal import get_access_token,cancel_subscription, get_subscription_details,update_subscription_plan,update_current_subscription_plan
 from django.db.models import Avg,Count
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.core.paginator import Paginator
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -140,7 +140,7 @@ def standard_posts(request):
         article_standard_authors=Article.objects.filter(is_standard=True).values('author')
         article_categories=Article.objects.filter(is_standard=True).values("category").distinct()
         accounts=AccountStatus.objects.filter(user__in=article_standard_authors)
-        recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
+        recent_articles=get_recent_articles(request.user.id)
         query=request.GET.get("search","")
         if query:
             param=request.GET.get("select","")
@@ -170,7 +170,7 @@ def standard_posts(request):
 @login_required(login_url="sign-in")
 def subscription_posts(request):
     param=request.GET.get("select")
-    recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
+    recent_articles=get_recent_articles(request.user.id)
 
     try:
         Subscription.objects.get(user=request.user,is_active=True)
@@ -202,7 +202,7 @@ def subscription_posts(request):
 @login_required(login_url="sign-in")
 def premium_subscription_posts(request):
     param=request.GET.get("select")
-    recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
+    recent_articles=get_recent_articles(request.user.id)
 
     try:
         Subscription.objects.get(user=request.user,is_active=True)
@@ -224,7 +224,7 @@ def premium_subscription_posts(request):
 
 @login_required(login_url="sign-in")
 def premium_posts(request):
-    recent_articles=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
+    recent_articles=get_recent_articles(request.user.id)
 
     try:
         sub_user=Subscription.objects.get(user=request.user,is_active=True)
@@ -352,7 +352,7 @@ def confirm_update_subscription(request):
 def tab(request):
     param=request.GET.get("select")
     articles=None
-    recent_posts=RecentArticle.objects.filter(user=request.user).select_related("article").order_by("-created_at")[:5]
+    recent_posts=get_recent_articles(request.user.id)
     if "Latest" in param:
         articles=Article.objects.all().order_by("-posted_at")
         categories=articles.values("category").distinct()
