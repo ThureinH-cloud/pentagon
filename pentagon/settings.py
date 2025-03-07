@@ -195,10 +195,7 @@ CELERY_BEAT_SCHEDULE = {
         "task": "writer.tasks.update_user_rank",
         'schedule':30
     },
-    'clean_recent_articles':{
-        "task": "writer.tasks.clean_recent_articles",
-        'schedule':60
-    },
+    
     
 }
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True 

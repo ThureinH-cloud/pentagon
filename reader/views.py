@@ -29,7 +29,7 @@ def log_recent_article(user_id, article_id):
 def get_recent_articles(user_id):
     key = f"recent_articles:{user_id}"
     article_ids = cache.get(key, [])
-    return Article.objects.filter(id__in=article_ids)[:5]
+    return Article.objects.filter(id__in=article_ids)
 
 def get_account_status(request):
     account_status = AccountStatus.objects.get(user=request.user)
@@ -402,17 +402,16 @@ def article_review(request,id):
             rating=0
         UserNotification.objects.create(user=article.author, has_new_comment=True)
         ArticleReview.objects.create(user=request.user, article=article, comment=comment, rating=rating) 
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            "comments_group",
-            {
-                "type": "send_comment",
-                "text": comment,
-                "user": request.user.username,
-            }
-        )
+        notify_author(author_id=article.author.id,comment=comment,request=request)
         return redirect(reverse("post-detail", args=[id]))
 
+def notify_author(author_id,comment,request):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"author_{author_id}",
+        {"type": "send_notification",  "text": comment,
+                "user": request.user.username,},
+    )
 
 def update_author_reply(request,id):
     article_review=ArticleReview.objects.get(id=id)

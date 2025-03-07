@@ -42,8 +42,3 @@ def update_user_rank():
         
         except Exception as e:
             print(f"Error processing user {user.username}: {e}")
-@shared_task
-def clean_recent_articles():
-    users=User.objects.annotate(article_count=Count("recentarticle"))
-    for user in users:
-        print(user.article_count)
