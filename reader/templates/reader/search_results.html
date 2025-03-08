@@ -4,7 +4,7 @@
 {% endblock  %}
 {% block content %}
   
-<div class=" bg-base-200 min-h-screen flex w-100">
+<div class=" bg-base-200 min-h-screen flex w-100 mt-4">
   <div class="grid grid-cols-8 gap-2 ">
       <div class="col-start-1 col-span-5 mt-12 mx-5">
           <div class="card">
@@ -270,7 +270,7 @@
                     Categories
                     <div class="card bg-base-100 w-96 shadow-xl">
                         <div class="card-body">
-                           {% for category in results %}
+                           {% for category in categories %}
                            <div class="flex-row flex items-center">
                                  <h2 class="mx-4 text-lg">- <a href="{% url 'category' category.category  %}" class="link">{{category.category}}</a></h2> 
                            </div>

@@ -1,8 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
-
-from pentagon import settings
 from .models import Article,UserNotification,ArticleReview
 from .forms import ArticleForm, StandardArticleForm,PremiumArticleForm
 from account.models import AccountStatus
@@ -45,10 +43,14 @@ def author_statistics(request):
     context={
         "authors":authors,
         "account_status":get_account_status(request),
-        'MEDIA_URL': settings.MEDIA_URL
     }
     return render(request,"writer/authors-statistics.html",context)
 
+@login_required(login_url="sign-in")
+def article_statistics(request):
+    return render(request,"writer/article-statistics.html")
+
+@login_required(login_url="sign-in")
 def user_statistics(request):
     users=AccountStatus.objects.annotate(name=F("user__username"),email=F("user__email"),date_joined=F("user__date_joined")).exclude(user_id=1)
     print(users)

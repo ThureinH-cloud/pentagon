@@ -44,11 +44,12 @@ def client_home(request):
         param=request.GET.get("select","")
         articles=Article.objects.filter(title__icontains=query)
         authors=AccountStatus.objects.filter(user__in=articles.values("author"))
-        categories=articles.values("category").distinct()
+        categories=Article.objects.values("category").distinct()
         context={
             "results":articles,
             "recent_articles":recent_articles,
             "authors":authors,
+            "categories":categories,
             "account_status":get_account_status(request),
             "param":param,
             "query":query
@@ -179,16 +180,16 @@ def subscription_posts(request):
         return redirect("subscription-locked")
     if "Latest" in param:
         articles=Article.objects.filter(is_standard=True).order_by("-posted_at")
-        categories=articles.values("category").distinct()
+        categories=Article.objects.values("category").distinct()
         authors=AccountStatus.objects.filter(user__in=articles.values("author"))
         
     elif "Highest" in param:
         articles=Article.objects.filter(is_standard=True).annotate(avg_rating=Avg('article_review__rating')).order_by("-avg_rating")
-        categories=articles.values("category").distinct()
+        categories=Article.objects.values("category").distinct()
         authors=AccountStatus.objects.filter(user__in=articles.values("author"))
     elif "Most Favorite" in param:
         articles=Article.objects.filter(is_standard=True).annotate(favorite_count=Count('favorite__article')).order_by("-favorite_count")
-        categories=articles.values("category").distinct()
+        categories=Article.objects.values("category").distinct()
         authors=AccountStatus.objects.filter(user__in=articles.values("author"))
     context={
         "articles":articles,
@@ -357,17 +358,17 @@ def tab(request):
     recent_posts=get_recent_articles(request.user.id)
     if "Latest" in param:
         articles=Article.objects.all().order_by("-posted_at")
-        categories=articles.values("category").distinct()
+        categories=Article.objects.all().values("category").distinct()
         authors=User.objects.filter(id__in=articles.values("author"))
         accounts=AccountStatus.objects.filter(user__in=authors)
     elif "Highest" in param:
         articles=Article.objects.annotate(avg_rating=Avg('article_review__rating')).order_by("-avg_rating")
-        categories=articles.values("category").distinct()
+        categories=Article.objects.all().values("category").distinct()
         authors=User.objects.filter(id__in=articles.values("author"))
         accounts=AccountStatus.objects.filter(user__in=authors)
     else:
         articles=Article.objects.annotate(favorite_count=Count('favorite__article')).order_by("-favorite_count")
-        categories=articles.values("category").distinct()
+        categories=Article.objects.all().values("category").distinct()
         authors=User.objects.filter(id__in=articles.values("author"))
         accounts=AccountStatus.objects.filter(user__in=authors)
     context={
