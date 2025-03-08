@@ -34,6 +34,13 @@ def admin_dashboard(request):
         return redirect("writer-dashboard")
 
 @login_required(login_url="sign-in")
+def author_statistics(request):
+    users=User.objects.all().exclude(username="admin")
+    authors=Article.objects.filter(author__in=users).values("author").distinct()
+    
+    return render(request,"writer/authors-statistics.html")
+
+@login_required(login_url="sign-in")
 def writer_dashboard(request):
     current_user=request.user
     user_rank=AccountStatus.objects.get(user=current_user)
