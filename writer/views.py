@@ -17,13 +17,13 @@ def user_notifications(request):
 
 @login_required(login_url="sign-in")
 def admin_dashboard(request):
-    users=User.objects.all().exclude(username="admin").count()
-    authors=Article.objects.filter(author__isnull=False).count()
-    sub_users=Subscription.objects.filter(is_active=True).count()
+    users=User.objects.all().exclude(username="admin")
+    authors=Article.objects.filter(author__in=users).values("author").distinct().count()
+    sub_users=Subscription.objects.filter(is_active=True).exclude(user_id=1).count()
     articles=Article.objects.all().count()
     if request.user.is_staff:
         context={
-            "users":users,
+            "users":users.count(),
             "authors":authors,
             "sub_users":sub_users,
             "articles":articles,
