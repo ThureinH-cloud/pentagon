@@ -6,6 +6,7 @@ from .forms import ArticleForm, StandardArticleForm,PremiumArticleForm
 from account.models import AccountStatus
 from reader.models import Subscription
 from django.db.models import Sum
+from django.contrib.auth.models import User
 # Create your views here.
 def get_account_status(request):
     account_status = AccountStatus.objects.get(user=request.user)
@@ -16,8 +17,21 @@ def user_notifications(request):
 
 @login_required(login_url="sign-in")
 def admin_dashboard(request):
+    users=User.objects.all().exclude(username="admin").count()
+    authors=Article.objects.filter(author__isnull=False).count()
+    sub_users=Subscription.objects.filter(is_active=True).count()
+    articles=Article.objects.all().count()
     if request.user.is_staff:
-        return render(request,"writer/admin-dashboard.html")
+        context={
+            "users":users,
+            "authors":authors,
+            "sub_users":sub_users,
+            "articles":articles,
+            "account_status":get_account_status(request)
+        }
+        return render(request,"writer/admin-dashboard.html",context)
+    else:
+        return redirect("writer-dashboard")
 
 @login_required(login_url="sign-in")
 def writer_dashboard(request):

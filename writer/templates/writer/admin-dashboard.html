@@ -38,7 +38,7 @@ Dashboard - Pentagon
           <a class="ml-4" href="{% url 'writer-ranks' %}"><i class="fa-solid fa-ranking-star"></i>Ranks</a>
         </li>
         <li class="my-3">
-            <a class="ml-4" href="{% url 'writer-ranks' %}"><i class="fa-solid fa-ranking-star"></i>Subscription Users</a>
+            <a class="ml-4" href="{% url 'subscription-statistics' %}"><i class="fa-solid fa-dollar-sign"></i>Subscriptions</a>
         </li>
         
     </ul>
@@ -48,7 +48,7 @@ Dashboard - Pentagon
             <div class="grid grid-cols-4 gap-2 mx-3">
                 <div class="card bg-base-200 w-72 shadow-xl">
                     <div class="card-body">
-                      <h2 class="card-title">Users</h2>
+                      <h2 class="card-title flex justify-between items-center">Users <div> {{users}}</div></h2>
                       
                       <div class="card-actions justify-end">
                         <button class="btn btn-primary">Buy Now</button>
