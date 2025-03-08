@@ -80,6 +80,8 @@
               </div>
               <div class="grid grid-cols-4 gap-2 mx-3">
                 
+                
+                {% if articles %}
                 {% for article in articles %}    
                 <div class="card m-3 bg-base-200 w-72 shadow-xl">
                     <figure>
@@ -112,6 +114,12 @@
                   </div>
                   
                 {% endfor %}
+                {% else %}
+                <div>
+                  <p class="text-center">No Articles Here</p>
+                </div>
+                {% endif %}
+                  
 
               
               </div>

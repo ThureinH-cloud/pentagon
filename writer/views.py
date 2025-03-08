@@ -5,6 +5,7 @@ from .models import Article,UserNotification,ArticleReview
 from .forms import ArticleForm, StandardArticleForm,PremiumArticleForm
 from account.models import AccountStatus
 from reader.models import Subscription
+from django.db.models import Sum
 # Create your views here.
 def get_account_status(request):
     account_status = AccountStatus.objects.get(user=request.user)
@@ -175,11 +176,15 @@ def rank_locked(request):
 def writer_ranks(request):
     return render(request, "writer/writer-ranks.html",{"account_status":get_account_status(request)})
 
+@login_required(login_url="sign-in")
 def statistics(request):
     subscription_users=Subscription.objects.all().exclude(user=1)
+    total_profit=sum(float(subscription.subscription_cost) for subscription in subscription_users)
+    print(total_profit)
     context={
         "account_status":get_account_status(request),
-        "accounts":subscription_users
+        "accounts":subscription_users,
+        "total_profit":total_profit
     }
     return render(request, "writer/statistics.html",context)
 

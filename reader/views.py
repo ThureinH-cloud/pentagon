@@ -80,7 +80,6 @@ def article_detail(request,id):
     account_status=AccountStatus.objects.get(user=request.user)
     reviewer_check=ArticleReview.objects.filter(article=article,user=request.user)
     reply_check=ArticleReview.objects.filter(article=article, user=request.user, author_reply__isnull=False)
-    log_recent_article(request.user.id, article.id)
     if reviewer_check.exists():
         exist=False
     else:
@@ -109,6 +108,8 @@ def article_detail(request,id):
                 return redirect("subscription-locked")
     else:
         pass
+    log_recent_article(request.user.id, article.id)
+
     article_reviews=ArticleReview.objects.filter(article=article)
     user_favorites=Favorite.objects.filter(user=request.user)
     

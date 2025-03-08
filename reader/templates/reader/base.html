@@ -135,14 +135,6 @@
       </script>
    
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      const socket = new WebSocket("ws://localhost:8000/ws/comments/");
-
-    socket.onmessage = function(event) {
-        const data = JSON.parse(event.data);
-        console.log("New Comment from:", data.user);
-        console.log("Comment Text:", data.text);
-    };
-    </script>
+    
 </body>
 </html>

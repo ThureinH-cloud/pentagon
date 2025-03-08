@@ -3,12 +3,12 @@
 
 
 {% block writer %}
-<div class=" w-full bg-base-200 m-3">
-    <table class="table ">
+<div class=" w-full bg-base-200 m-3 max-h-fit">
+    <table class="table">
       <!-- head -->
       <thead>
         <tr>
-          <th>Id</th>
+          <th>Subscription Id</th>
           <th>Name</th>
           <th>Plan</th>
           <th>Cost</th>
@@ -20,7 +20,9 @@
         
         {% for account in accounts %}
         <tr>
-            <td></td>
+            <td>
+              {{account.paypal_subscription_id}}
+            </td>
             <td>
               <div class="flex items-center gap-3">
                 <div class="avatar">
@@ -47,11 +49,19 @@
           </tr>
         {% endfor %}
             
-        <!-- row 2 -->
+        
         
       </tbody>
       <!-- foot -->
-      
+      <tfoot>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>Total Profit</th>
+          <th>${{total_profit}}</th>
+          <th></th>
+        </tr>
+      </tfoot>
     </table>
   </div>
 {% endblock  %}

@@ -105,6 +105,7 @@ def create_subscription(request):
         sub_cost='9.99'
     access_token = get_access_token()
     result=get_subscription_details(access_token, subId)
+    print(result)
     if result is None:
         messages.error(request, "Subscription already exists or invalid data provided.")
         return redirect("home")
