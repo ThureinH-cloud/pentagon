@@ -12,7 +12,9 @@
           <th>Name</th>
           <th>Plan</th>
           <th>Cost</th>
+          <th>Billing Date</th>
           <th>Remaining Days</th>
+          <th>Next Billing Date</th>
         </tr>
       </thead>
       <tbody>
@@ -44,19 +46,22 @@
                 <div class="font-bold">$ {{account.subscription_cost|to_float}}</div>
             </td>
             <td>
+              <div class="font-bold">{{account.created_at}}</div>
+            </td>
+            <td>
                 <div class="font-bold">{{account.remaining}} Days</div>
+            </td>
+            <td>
+              <div class="font-bold">{{account.expires_at}}</div>
             </td>
           </tr>
         {% endfor %}
-            
-        
-        
       </tbody>
       <!-- foot -->
       <tfoot>
         <tr>
-          <th></th>
-          <th></th>
+          <th>Total Subscriptions</th>
+          <th>{{count}}</th>
           <th>Total Profit</th>
           <th>${{total_profit}}</th>
           <th></th>

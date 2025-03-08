@@ -48,7 +48,14 @@ def author_statistics(request):
 
 @login_required(login_url="sign-in")
 def article_statistics(request):
-    return render(request,"writer/article-statistics.html")
+    articles=Article.objects.all()
+    count=articles.count()
+    context={
+        "articles":articles,
+        "count":count,
+        "account_status":get_account_status(request)
+    }
+    return render(request,"writer/article-statistics.html",context)
 
 @login_required(login_url="sign-in")
 def user_statistics(request):
@@ -226,12 +233,12 @@ def writer_ranks(request):
 @login_required(login_url="sign-in")
 def statistics(request):
     subscription_users=Subscription.objects.all().exclude(user=1)
-    print(subscription_users)
     total_profit=sum(float(subscription.subscription_cost) for subscription in subscription_users)
     
     context={
         "account_status":get_account_status(request),
         "accounts":subscription_users,
+        "count":subscription_users.count(),
         "total_profit":total_profit
     }
     return render(request, "writer/statistics.html",context)

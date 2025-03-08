@@ -6,47 +6,57 @@
       <thead>
         <tr>
           <th>Id</th>
-          <th>Name</th>
-          <th>Rank</th>
-          <th>Total Published Articles</th>
+          <th>Title</th>
+          <th>Photo</th>
+          <th>Category</th>
+          <th>Plan</th>
+          <th>Views</th>
         </tr>
       </thead>
       <tbody>
         <!-- row 1 -->
         
-        {% for account in authors %}
-        
-        {% if account.total_articles is 0 %}
-            <p></p>
-            {% else %}
+        {% for article in articles %}
+
             <tr>
                 <td>
-                  {{account.id}}
+                  {{article.id}}
+                </td>
+                <td>
+                  {{article.title}}
                 </td>
                 <td>
                   <div class="flex items-center gap-3">
                     <div class="avatar">
                       <div class="mask mask-squircle h-12 w-12">
-                        <img src="{{ account.profile.url }}" alt="Profile Image" />
+                        <img src="{{ article.photo.url }}" alt="Profile Image" />
                         
                       </div>
                     </div>
-                    <div>
-                      <div class="font-bold">{{account.user}}</div>
-                    </div>
+                    
                   </div>
                 </td>
                 <td>
-                    <div class="font-bold">{{account.rank}}</div>
+                    <div class="font-bold">{{article.category}}</div>
                 </td>
                 <td>
-                    <div class="font-bold"> {{account.total_articles}}</div>
+                    <div class="font-bold"> 
+                      {% if article.is_premium %}
+                      <i class="fa-solid fa-crown text-warning"></i>
+                      Premium
+                      {% elif article.is_standard %}
+                      <i class="fa-solid fa-lock"></i>
+                      Standard
+                      {% else %}
+                      <i class="fa-solid fa-lock-open"></i>
+                      Free
+                      {% endif %}
+                      </div>
                 </td>
                 <td>
-                    <div class="font-bold">{{account.get_account_status.rank}} </div>
+                    <div class="font-bold">{{article.view_count}} </div>
                 </td>
               </tr>
-        {% endif %}
             
         {% endfor %}
             
@@ -54,7 +64,15 @@
         
       </tbody>
       <!-- foot -->
-    
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>Total Articles</th>
+          <th>{{count}}</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </tfoot>
     </table>
   </div>
 {% endblock  %}
