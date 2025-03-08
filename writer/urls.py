@@ -4,6 +4,7 @@ urlpatterns = [
     path("writer-dashboard/",views.writer_dashboard,name="writer-dashboard"),
     path('admin-dashboard/',views.admin_dashboard,name="admin-dashboard"),
     path('author-statistics/',views.author_statistics,name="author-statistics"),
+    path('user-statistics/',views.user_statistics,name="user-statistics"),
     path('subscription-statistics/',views.statistics,name="subscription-statistics"),
     path('create-article/',views.create_article,name="create-article"),
     path('update-article/<int:id>/', views.update_article, name="update-article"),

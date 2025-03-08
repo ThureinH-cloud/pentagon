@@ -40,7 +40,7 @@ def admin_dashboard(request):
 
 @login_required(login_url="sign-in")
 def author_statistics(request):
-    authors = AccountStatus.objects.annotate(total_articles=Count("user__article__title")).exclude(user_id=1 )
+    authors = AccountStatus.objects.annotate(total_articles=Count("user__article__title")).exclude(user_id=1)
     print(authors)
     context={
         "authors":authors,
@@ -48,6 +48,15 @@ def author_statistics(request):
         'MEDIA_URL': settings.MEDIA_URL
     }
     return render(request,"writer/authors-statistics.html",context)
+
+def user_statistics(request):
+    users=AccountStatus.objects.annotate(name=F("user__username"),email=F("user__email"),date_joined=F("user__date_joined")).exclude(user_id=1)
+    print(users)
+    context={
+        "users":users,
+        "account_status":get_account_status(request)
+    }
+    return render(request, "writer/users-statistics.html", context)
 
 @login_required(login_url="sign-in")
 def writer_dashboard(request):

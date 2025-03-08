@@ -8,6 +8,7 @@ class AccountStatus(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE,related_name="account_status")
     rank=models.CharField(max_length=20,blank=True, default="Silver")
     created_at=models.DateTimeField(auto_now=True)
-    
+    def get_profile_by_user(self):
+        return self.user.account_status.first()
     def __str__(self):
         return self.user.username
