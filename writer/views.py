@@ -15,9 +15,15 @@ def user_notifications(request):
     return user_notifications
 
 @login_required(login_url="sign-in")
+def admin_dashboard(request):
+    if request.user.is_staff:
+        return render(request,"writer/admin-dashboard.html")
+
+@login_required(login_url="sign-in")
 def writer_dashboard(request):
     current_user=request.user
     user_rank=AccountStatus.objects.get(user=current_user)
+    
     try:
         articles=Article.objects.all().filter(author=current_user).order_by("-posted_at")
     except Article.DoesNotExist:

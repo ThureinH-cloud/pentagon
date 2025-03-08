@@ -71,59 +71,66 @@
         </li>
     </ul>
     {% block writer %}
-        <div class="justify-center">
-            <div class="card m-3 bg-base-200 w-96 shadow-xl">
-        
+       
+      
+       <div class="justify-center">
+        <div class="card m-3 bg-base-200 w-96 shadow-xl">
+    
+            <div class="card-body">
+              <h2 class="card-title">Welcome {{user}}<i class="fa-solid fa-hand-wave"></i></h2>
+            </div>
+          </div>
+          <div class="grid grid-cols-4 gap-2 mx-3">
+            
+            
+            {% if articles %}
+            {% for article in articles %}    
+            <div class="card m-3 bg-base-200 w-72 shadow-xl">
+                <figure>
+                    <img style="max-height:150px;" src="{{article.photo.url}}" alt="">
+                  </figure>
                 <div class="card-body">
-                  <h2 class="card-title">Welcome {{user}}<i class="fa-solid fa-hand-wave"></i></h2>
-                </div>
-              </div>
-              <div class="grid grid-cols-4 gap-2 mx-3">
                 
-                
-                {% if articles %}
-                {% for article in articles %}    
-                <div class="card m-3 bg-base-200 w-72 shadow-xl">
-                    <figure>
-                        <img style="max-height:150px;" src="{{article.photo.url}}" alt="">
-                      </figure>
-                    <div class="card-body">
-                    
-                      <h2 class="card-title">{{ article.title}}</h2>
-                      <p>{{article.content|safe|truncatewords:20}}</p>
-                      <div class="badge badge-warning badge-outline">{{article.category}}</div>
+                  <h2 class="card-title">{{ article.title}}</h2>
+                  <p>{{article.content|safe|truncatewords:20}}</p>
+                  <div class="badge badge-warning badge-outline">{{article.category}}</div>
 
-                      {{article.posted_at|date:"Y-m-d"}}
-                      <br>
-                      {% if article.is_premium %}
-                        <div class="flex items-center">
-                          <i class="fa-solid fa-crown text-warning mr-1 "></i>
-                          Premium
-                        </div>
-                        {% elif article.is_standard %}
-                        <div class="flex items-center"><i class="fa-solid fa-lock mr-1"></i>Standard</div>
-                        {% else %}
-                        <div class="flex items-center"> <i class="fa-solid fa-lock-open mr-1"></i>Free</div>
-                      {% endif %}
-                        
-                      <div class="gap-4 grid">
-                        <a href="{% url 'update-article' article.id %}" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i>Edit</a>
-                        <a href="{% url 'delete-article' article.id %}" class="btn btn-error"><i class="fa-solid fa-trash"></i>Delete</a>
-                        </div>
+                  {{article.posted_at|date:"Y-m-d"}}
+                  <br>
+                  {% if article.is_premium %}
+                    <div class="flex items-center">
+                      <i class="fa-solid fa-crown text-warning mr-1 "></i>
+                      Premium
                     </div>
-                  </div>
-                  
-                {% endfor %}
-                {% else %}
-                <div>
-                  <p class="text-center">No Articles Here</p>
+                    {% elif article.is_standard %}
+                    <div class="flex items-center"><i class="fa-solid fa-lock mr-1"></i>Standard</div>
+                    {% else %}
+                    <div class="flex items-center"> <i class="fa-solid fa-lock-open mr-1"></i>Free</div>
+                  {% endif %}
+                    
+                  <div class="gap-4 grid">
+                    <a href="{% url 'update-article' article.id %}" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i>Edit</a>
+                    <a href="{% url 'delete-article' article.id %}" class="btn btn-error"><i class="fa-solid fa-trash"></i>Delete</a>
+                    </div>
                 </div>
-                {% endif %}
-                  
-
-              
               </div>
-        </div>
+              
+            {% endfor %}
+            {% else %}
+            <div>
+              
+              
+              
+              <p class="text-center">No Articles Here</p>
+
+            </div>
+            {% endif %}
+              
+
+          
+          </div>
+    </div>
+        
        
         
     {% endblock  %}
