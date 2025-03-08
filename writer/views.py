@@ -1,16 +1,21 @@
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
+
+from pentagon import settings
 from .models import Article,UserNotification,ArticleReview
 from .forms import ArticleForm, StandardArticleForm,PremiumArticleForm
 from account.models import AccountStatus
 from reader.models import Subscription
-from django.db.models import Sum
+from django.db.models import Sum,F
 from django.contrib.auth.models import User
+from django.db.models import Avg,Count
+
 # Create your views here.
 def get_account_status(request):
     account_status = AccountStatus.objects.get(user=request.user)
     return account_status
+
 def user_notifications(request):
     user_notifications=UserNotification.objects.filter(user=request.user).count()
     return user_notifications
@@ -35,10 +40,14 @@ def admin_dashboard(request):
 
 @login_required(login_url="sign-in")
 def author_statistics(request):
-    users=User.objects.all().exclude(username="admin")
-    authors=Article.objects.filter(author__in=users).values("author").distinct()
-    
-    return render(request,"writer/authors-statistics.html")
+    authors = AccountStatus.objects.annotate(total_articles=Count("user__article__title")).exclude(user_id=1 )
+    print(authors)
+    context={
+        "authors":authors,
+        "account_status":get_account_status(request),
+        'MEDIA_URL': settings.MEDIA_URL
+    }
+    return render(request,"writer/authors-statistics.html",context)
 
 @login_required(login_url="sign-in")
 def writer_dashboard(request):
@@ -206,8 +215,9 @@ def writer_ranks(request):
 @login_required(login_url="sign-in")
 def statistics(request):
     subscription_users=Subscription.objects.all().exclude(user=1)
+    print(subscription_users)
     total_profit=sum(float(subscription.subscription_cost) for subscription in subscription_users)
-    print(total_profit)
+    
     context={
         "account_status":get_account_status(request),
         "accounts":subscription_users,

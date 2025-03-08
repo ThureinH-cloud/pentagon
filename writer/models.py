@@ -47,6 +47,7 @@ class Article(models.Model):
     
     def get_author_name(self):
         return self.author.username
+    
     def get_article_count_by_category(self):
         return Article.objects.filter(category=self.category).count()
     def get_account_status(self):
