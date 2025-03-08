@@ -33,39 +33,58 @@ Dashboard - Pentagon
 
 <div class="flex">
     <ul class="menu bg-base-200  w-56 min-h-screen">
-        <li><a class="ml-4" href="{% url 'writer-dashboard' %}"><i class="fa-solid fa-house mr-1"></i>Dashboard</a></li>
-        
-        <li>
-            <div class="bg-base-200 collapse collapse-arrow ">
-                <input type="checkbox" class="peer" />
-                <div
-                  class="collapse-title">
-                  <i class="fa-solid fa-book mr-1"></i>Create Article
-                </div>
-                <div
-                  class="collapse-content">
-                  <ul class="menu">
-                    <li><a  href="{% url 'create-article' %}">Free</a></li>
-                    <li><a  href="{% url 'create-standard-article' %}">Standard<i class="fa-solid fa-lock mr-1"></i></a></li>   
-                    <li><a  href="{% url 'create-premium-article' %}">Premium<i class="fa-solid fa-lock mr-1"></i></a></li>
-                  </ul>
-                </div>
-              </div>
-        </li>
-        
-        <li>
+        <li class="my-3"><a class="ml-4" href="{% url 'admin-dashboard' %}"><i class="fa-solid fa-house mr-1"></i>Dashboard</a></li>
+        <li class="my-3">
           <a class="ml-4" href="{% url 'writer-ranks' %}"><i class="fa-solid fa-ranking-star"></i>Ranks</a>
         </li>
-        <li>
-          <a class="ml-4" href="{% url 'check-comments' %}"><i class="fa-solid fa-comments"></i>Comments 
-          
-          {% if user_notifications %}
-          <div class="badge badge-secondary">
-            +{{user_notifications}}
-          </div>
-          {% endif %}
-            
-          </a>
+        <li class="my-3">
+            <a class="ml-4" href="{% url 'writer-ranks' %}"><i class="fa-solid fa-ranking-star"></i>Subscription Users</a>
         </li>
+        
     </ul>
+    {% block writer %}
+    <div class="my-4">
+        <div class="justify-center">
+            <div class="grid grid-cols-4 gap-2 mx-3">
+                <div class="card bg-base-200 w-72 shadow-xl">
+                    <div class="card-body">
+                      <h2 class="card-title">Users</h2>
+                      
+                      <div class="card-actions justify-end">
+                        <button class="btn btn-primary">Buy Now</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card bg-base-200 w-72 shadow-xl">
+                    <div class="card-body">
+                      <h2 class="card-title">Authors</h2>
+                      <div class="card-actions justify-end">
+                        <button class="btn btn-primary">Buy Now</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card bg-base-200 w-72 shadow-xl">
+                    <div class="card-body">
+                      <h2 class="card-title">Subscription Users</h2>
+                      
+                      <div class="card-actions justify-end">
+                        <button class="btn btn-primary">Buy Now</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card bg-base-200 w-72 shadow-xl">
+                    <div class="card-body">
+                      <h2 class="card-title">Articles</h2>
+                     
+                      <div class="card-actions justify-end">
+                        <button class="btn btn-primary">Buy Now</button>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+    {% endblock  %}
+</div>
+
 {% endblock  %}
