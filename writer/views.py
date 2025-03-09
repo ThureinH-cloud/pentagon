@@ -59,8 +59,8 @@ def article_statistics(request):
 @login_required(login_url="sign-in")
 def user_statistics(request):
     users=AccountStatus.objects.annotate(name=F("user__username"),email=F("user__email"),date_joined=F("user__date_joined")).exclude(user_id=1)
-    print(users)
     context={
+        "count":users.count(),
         "users":users,
         "account_status":get_account_status(request)
     }

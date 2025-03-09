@@ -134,8 +134,13 @@ def article_detail(request,id):
 @login_required(login_url="sign-in")
 def profile(request):
     users=AccountStatus.objects.filter(user=request.user).annotate(email=F('user__email'),plan=F('user__sub_user__subscription_plan'))
+    favorite_posts=Favorite.objects.filter(user=request.user).annotate(title=F('article__title'))
+    recent_posts=get_recent_articles(request.user.id)
+    print(recent_posts)
     context={
         "users":users,
+        "favorite_posts":favorite_posts,
+        "recent_posts":recent_posts,
         "account_status":get_account_status(request)
     }
     return render(request, "reader/profile.html",context)
@@ -438,7 +443,6 @@ def article_review(request,id):
         rating=request.POST.get("rating")
         if rating is None:
             rating=0
-        UserNotification.objects.create(user=article.author, has_new_comment=True)
         ArticleReview.objects.create(user=request.user, article=article, comment=comment, rating=rating) 
         notify_author(author_id=article.author.id,comment=comment,request=request)
         return redirect(reverse("post-detail", args=[id]))
