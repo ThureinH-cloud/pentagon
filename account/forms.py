@@ -10,7 +10,6 @@ class CreateUserForm(UserCreationForm):
         model=User
         fields=['username','email','password1','password2']
     
-    Captcha=ReCaptchaField(required=True,widget=ReCaptchaV2Checkbox)
 
 class LoginForm(AuthenticationForm):
     username=forms.CharField(widget=TextInput())

@@ -24,6 +24,8 @@ SECRET_KEY = 'django-insecure-2#t-+d7rd(u#*2by^=!kw0-84=$%*1kn&%ars0w=jw!w4^9rdf
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ALLOWED_HOSTS = ['*']
+
 
 # ALLOWED_HOSTS = ['*']
 # CSRF_TRUSTED_ORIGINS = ['*']
@@ -172,9 +174,9 @@ AUTO_LOGOUT = {
 SECURE_CROSS_ORIGIN_OPENER_POLICY="same-origin-allow-popups"
 
 
-AWS_ACCESS_KEY_ID='AKIAX5EDBOPT2ICC43BM'
+AWS_ACCESS_KEY_ID='AKIASVLKCIYWJU5E6NRX'
 
-AWS_SECRET_ACCESS_KEY='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'
+AWS_SECRET_ACCESS_KEY='YtiF5V6sHY4sAtLlZE0LmiUjDgPhZ60shq6FHACm'
 
 EMAIL_BACKEND = "django_ses.SESBackend"
 
@@ -184,8 +186,11 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 AWS_SES_REGION_NAME = "ap-southeast-2"
 AWS_SES_REGION_ENDPOINT = "email.ap-southeast-2.amazonaws.com"
+
 DEFAULT_FROM_EMAIL = 'dbodbo086@gmail.com'
-SITE_URL='http://pentagon-dev.ap-southeast-2.elasticbeanstalk.com/'
+
+SITE_URL='http://127.0.0.1:8000'
+
 CELERY_BEAT_SCHEDULE = {
     'delete_expired_subscriptions': {
         'task': 'reader.tasks.delete_expired_subscriptions',

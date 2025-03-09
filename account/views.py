@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.urls import reverse
-from django.conf import settings
+from pentagon import settings
 from django.core.mail import send_mail
 from reader.models import Subscription
 from django.template.loader import render_to_string
@@ -35,21 +35,27 @@ def sign_up( request):
 
 def sign_in(request):
     form=LoginForm()
+    account_status=AccountStatus.objects.get(user=request.user)
     if request.method=="POST":
         form=LoginForm(request,data=request.POST)
-        if form.is_valid():
+        if form.is_valid() and account_status.is_verified:
             name=request.POST['username']
             password=request.POST['password']
-            user=authenticate(request, username=name, password=password)
+            user=authenticate(request, username=name,password=password)
             if user is not None:
                 login(request, user)
                 return redirect('client-home')
+        elif account_status.is_verified is False:
+            messages.error(request, "Please verify your email first.")
     return render(request, 'account/sign-in.html', {"form":form})
+
+@login_required(login_url='sign-in')
 def home(request):
     user=request.user
     if user.is_authenticated:
        return redirect("client-home") 
     return render(request, "account/index.html",{'user':user})
+
 @login_required(login_url='sign-in')
 def dashboard(request):
     return render(request, "account/dashboard.html")
