@@ -146,15 +146,16 @@ def standard_posts(request):
         query=request.GET.get("search","")
         if query:
             param=request.GET.get("select","")
-            articles=Article.objects.filter(title__icontains=query)
+            articles=Article.objects.filter(title__icontains=query,is_standard=True)
             authors=AccountStatus.objects.filter(user__in=articles.values("author"))
-            print(articles)
+            
             context={
                 "results":articles,
                 "recent_articles":recent_articles,
                 "authors":authors,  
                 "query":query,
                 "param":param,
+                "categories":article_categories,
                 "account_status":get_account_status(request)
             }
             return render(request,"reader/search_results.html",context)
@@ -212,13 +213,21 @@ def premium_subscription_posts(request):
         return redirect("subscription-locked")
     if "Latest" in param:
         articles=Article.objects.filter(is_premium=True).order_by("-posted_at")
+        categories=Article.objects.values("category").distinct()
+        authors=AccountStatus.objects.filter(user__in=articles.values("author"))
     elif "Highest" in param:
         articles=Article.objects.filter(is_premium=True).annotate(avg_rating=Avg('article_review__rating')).order_by("-avg_rating")
+        categories=Article.objects.values("category").distinct()
+        authors=AccountStatus.objects.filter(user__in=articles.values("author"))
     elif "Most Favorite" in param:
         articles=Article.objects.filter(is_premium=True).annotate(favorite_count=Count('favorite__article')).order_by("-favorite_count")
+        categories=Article.objects.values("category").distinct()
+        authors=AccountStatus.objects.filter(user__in=articles.values("author"))
     context={
         "articles":articles,
         "param":param,
+        "categories":categories,
+        "authors":authors,
         "recent_articles":recent_articles,
         "account_status":get_account_status(request)
     }
@@ -236,6 +245,23 @@ def premium_posts(request):
         articles=Article.objects.filter(is_premium=True).select_related("author")
         authors=AccountStatus.objects.filter(user__in=articles.values("author"))
         categories=Article.objects.filter(is_premium=True).values("category")
+        query=request.GET.get("search","")
+        if query:
+            param=request.GET.get("select","")
+            articles=Article.objects.filter(title__icontains=query,is_premium=True)
+            authors=AccountStatus.objects.filter(user__in=articles.values("author"))
+            
+            context={
+                "results":articles,
+                "recent_articles":recent_articles,
+                "authors":authors,  
+                "query":query,
+                "param":param,
+                "categories":categories,
+
+                "account_status":get_account_status(request)
+            }
+            return render(request,"reader/search_results.html",context)
         context={
             "articles":articles,
             "account_status":get_account_status(request),
@@ -246,6 +272,7 @@ def premium_posts(request):
         return render(request, "reader/premium-posts.html", context)
     else:
         return redirect("subscription-locked")
+
 @login_required(login_url="sign-in")
 def subscription_locked(request):
     return render(request, "reader/subscription-locked.html",{"account_status":get_account_status(request)})

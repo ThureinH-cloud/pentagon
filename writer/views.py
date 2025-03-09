@@ -39,8 +39,9 @@ def admin_dashboard(request):
 @login_required(login_url="sign-in")
 def author_statistics(request):
     authors = AccountStatus.objects.annotate(total_articles=Count("user__article__title")).exclude(user_id=1)
-    print(authors)
+    real_authors=authors.filter(total_articles__gt=0).count()
     context={
+        "count":real_authors,
         "authors":authors,
         "account_status":get_account_status(request),
     }
