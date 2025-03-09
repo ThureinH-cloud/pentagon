@@ -227,6 +227,19 @@ def writer_ranks(request):
     return render(request, "writer/writer-ranks.html",{"account_status":get_account_status(request)})
 
 @login_required(login_url="sign-in")
+def profile(request):
+    account_status=AccountStatus.objects.get(user=request.user)
+    try:
+        user_subscription=Subscription.objects.get(user_id=request.user.id)
+    except Subscription.DoesNotExist:
+        user_subscription="None"
+    context={
+        "account_status":account_status,
+        "user_subscription":user_subscription
+    }
+    return render(request, "writer/profile.html",context)
+
+@login_required(login_url="sign-in")
 def statistics(request):
     subscription_users=Subscription.objects.all().exclude(user=1)
     total_profit=sum(float(subscription.subscription_cost) for subscription in subscription_users)

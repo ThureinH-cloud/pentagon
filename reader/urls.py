@@ -8,6 +8,7 @@ urlpatterns = [
     path('search/', views.search, name="search"),
     path('category/<str:category>/', views.category, name="category"),
     path('author/<str:author>/', views.author, name="author"),
+    path('profile/',views.profile,name="profile"),
     path('subscription-success/', views.subscription_success, name="subscription-success"),
     path('subscription-locked/',views.subscription_locked,name="subscription-locked"),
     path('subscription-plans/',views.subscription_plans,name="subscription-plans"),

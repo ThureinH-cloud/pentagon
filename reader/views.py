@@ -6,7 +6,7 @@ from account.models import AccountStatus
 from writer.models import Article,ArticleReview
 from django.contrib import messages
 from .paypal import get_access_token,cancel_subscription, get_subscription_details,update_subscription_plan,update_current_subscription_plan
-from django.db.models import Avg,Count
+from django.db.models import Avg,Count,F
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 from channels.layers import get_channel_layer
@@ -130,6 +130,15 @@ def article_detail(request,id):
         "reply_check":reply_check,
     }
     return render(request, "reader/post-detail.html", context)
+
+@login_required(login_url="sign-in")
+def profile(request):
+    users=AccountStatus.objects.filter(user=request.user).annotate(email=F('user__email'),plan=F('user__sub_user__subscription_plan'))
+    context={
+        "users":users,
+        "account_status":get_account_status(request)
+    }
+    return render(request, "reader/profile.html",context)
 
 @login_required(login_url="sign-in")
 def standard_posts(request):

@@ -65,22 +65,7 @@ def home(request):
 def dashboard(request):
     return render(request, "account/dashboard.html")
 
-@login_required(login_url='sign-in')
-def profile(request):
-    update_form=UpdateUserForm(request.POST or None, instance=request.user)
-    account_status=AccountStatus.objects.get(user=request.user)
-    
-    
-    try:
-        user_subscription=Subscription.objects.get(user_id=request.user.id)
-    except Subscription.DoesNotExist:
-        user_subscription="None"
-    context={
-        "form":update_form,
-        "account_status":account_status,
-        "user_subscription":user_subscription
-    }
-    return render(request, "writer/profile.html",context)
+
 
 @login_required(login_url='sign-in')
 def sign_out(request):
