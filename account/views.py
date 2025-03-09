@@ -15,6 +15,8 @@ from django.core.mail import send_mail
 from reader.models import Subscription
 from django.template.loader import render_to_string
 from reader.paypal import get_access_token,get_subscription_details
+from django.contrib.auth.models import AnonymousUser
+
 # Create your views here.
 def sign_up( request):
     form=CreateUserForm(request.POST or None)
@@ -35,18 +37,21 @@ def sign_up( request):
 
 def sign_in(request):
     form=LoginForm()
-    account_status=AccountStatus.objects.get(user=request.user)
     if request.method=="POST":
         form=LoginForm(request,data=request.POST)
-        if form.is_valid() and account_status.is_verified:
+        if form.is_valid():
             name=request.POST['username']
             password=request.POST['password']
             user=authenticate(request, username=name,password=password)
             if user is not None:
+                account_status=AccountStatus.objects.get(user=user)
+                print(account_status)
+                if account_status.is_verified is False:
+                    messages.error(request, "Please verify your email before signing in.")
+                    return redirect('sign-in')
                 login(request, user)
                 return redirect('client-home')
-        elif account_status.is_verified is False:
-            messages.error(request, "Please verify your email first.")
+            
     return render(request, 'account/sign-in.html', {"form":form})
 
 @login_required(login_url='sign-in')

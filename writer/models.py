@@ -78,18 +78,7 @@ class ArticleReview(models.Model):
         return self.comment
     
 
-class ArticleCollection(models.Model):
-    name=models.CharField(max_length=100)
-    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name="article_collection")
-    article=models.ForeignKey(Article, on_delete=models.CASCADE, related_name="article_collection")
-    created_at=models.DateTimeField(auto_now_add=True)
-    def __str__(self):
-        return self.article.title
+
     
 
 
-class UserNotification(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    has_new_comment = models.BooleanField(default=False)
-    def __str__(self):
-        return self.user.username + " -  Has Comment" 

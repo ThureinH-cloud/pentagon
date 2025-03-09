@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
-from .models import Article,UserNotification,ArticleReview
+from .models import Article,ArticleReview
 from .forms import ArticleForm, StandardArticleForm,PremiumArticleForm
 from account.models import AccountStatus
 from reader.models import Subscription
@@ -14,9 +14,7 @@ def get_account_status(request):
     account_status = AccountStatus.objects.get(user=request.user)
     return account_status
 
-def user_notifications(request):
-    user_notifications=UserNotification.objects.filter(user=request.user).count()
-    return user_notifications
+
 
 @login_required(login_url="sign-in")
 def admin_dashboard(request):
@@ -80,7 +78,6 @@ def writer_dashboard(request):
     context={
         "articles":articles,
         "user_rank":user_rank,
-        "user_notifications":user_notifications(request),
         "account_status":get_account_status(request)
     }
     return render(request, "writer/writer-dashboard.html", context)
@@ -105,7 +102,6 @@ def create_article(request):
     context={
         "categories":Article.CATEGORY_CHOICES,
         "account_status":get_account_status(request),
-        "user_notifications":user_notifications(request),
         "form":article_form
     }
     return render(request, "writer/create-article.html",context)
@@ -128,7 +124,6 @@ def create_standard_article(request):
             "form":form,
             "categories":categories,
             "account_status":get_account_status(request),
-            "user_notifications":user_notifications(request)
         }
     else:
         return redirect("writer-ranks")

@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Article,ArticleCollection
+from .models import Article
 from django import forms
 class ArticleForm(forms.ModelForm):
     class Meta:
@@ -25,7 +25,3 @@ class PremiumArticleForm(ModelForm):
         
 #     rating = forms.ChoiceField(choices=[(i, i) for i in range(1, 6)],widget=StarRatingWidget)
 
-class ArticleCollectionForm(ModelForm):
-    class Meta:
-        model=ArticleCollection
-        fields=['name']

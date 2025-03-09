@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'django_recaptcha',
     'fontawesomefree',
     'channels',
-    
+
 ]
 CHANNEL_LAYERS = {
     'default': {
