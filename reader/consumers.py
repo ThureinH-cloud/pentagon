@@ -31,7 +31,7 @@ class CommentConsumer(AsyncWebsocketConsumer):
         self.author_id = self.scope["url_route"]["kwargs"].get("author_id")
 
         if not self.author_id:
-            await self.close()  # Reject connection if author_id is missing
+            await self.close() 
 
         self.room_group_name = f"author_{self.author_id}"
 

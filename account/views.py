@@ -32,6 +32,7 @@ def sign_up( request):
             'full_link':full_link
         }
         send_mail('Welcome To Pentagon','', from_email=settings.DEFAULT_FROM_EMAIL, recipient_list=[current_user.email],html_message=render_to_string('account/verify-email-sent.html',context))
+        messages.error(request, "Please check your email to verify your account.")
         return redirect('sign-in')
     return render(request, 'account/sign-up.html', {"form":form})
 

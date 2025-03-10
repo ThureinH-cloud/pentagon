@@ -9,6 +9,8 @@ from django.db.models import Sum,F
 from django.contrib.auth.models import User
 from django.db.models import Avg,Count
 
+
+
 # Create your views here.
 def get_account_status(request):
     account_status = AccountStatus.objects.get(user=request.user)
@@ -114,19 +116,23 @@ def create_standard_article(request):
     if user_rank.rank != "Silver" :
         form=StandardArticleForm(request.POST or None)
         if request.method == "POST":
-            form=StandardArticleForm(request.POST, request.FILES)
-            if form.is_valid():
-                article=form.save(commit=False)
-                article.author=request.user
-                article.save()
-                return redirect("writer-dashboard")
+             article_author=request.user
+             category=request.POST.get("category")
+             title=request.POST.get("title")
+             content=request.POST.get("content")
+             photo=request.FILES.get("photo")
+             is_standard=request.POST.get("is_standard")
+             Article.objects.create(author=article_author, category=category, title=title, content=content, photo=photo,is_standard=is_standard)
+             return redirect("writer-dashboard")
+
+        
         context={
             "form":form,
             "categories":categories,
             "account_status":get_account_status(request),
         }
     else:
-        return redirect("writer-ranks")
+        return redirect("rank_locked")
     return render(request, "writer/create-standard-article.html", context)
 
 @login_required(login_url="sign-in")
@@ -136,12 +142,15 @@ def create_premium_article(request):
     if user_rank.rank == "Platinum":
         form=PremiumArticleForm(request.POST or None)
         if request.method == "POST":
-            form=PremiumArticleForm(request.POST, request.FILES)
-            if form.is_valid():
-                article=form.save(commit=False)
-                article.author=request.user
-                article.save()
-                return redirect("writer-dashboard")
+            
+             article_author=request.user
+             category=request.POST.get("category")
+             title=request.POST.get("title")
+             content=request.POST.get("content")
+             photo=request.FILES.get("photo")
+             is_premium=request.POST.get("is_premium")
+             Article.objects.create(author=article_author, category=category, title=title, content=content, photo=photo,is_premium=is_premium)
+             return redirect("writer-dashboard")
         context={
             "account_status":get_account_status(request),
             "form":form,
@@ -220,7 +229,10 @@ def delete_article(request, id):
 
 @login_required(login_url="sign-in")
 def rank_locked(request):
-    return render(request, "writer/rank-locked.html")
+    context={
+        "account_status":get_account_status(request)
+    }
+    return render(request, "writer/rank-locked.html",context)
 
 @login_required(login_url="sign-in")
 def writer_ranks(request):

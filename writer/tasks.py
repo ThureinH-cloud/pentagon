@@ -29,10 +29,10 @@ def update_user_rank():
 
             account_status = AccountStatus.objects.get(user=user)
 
-            if user_metrics >= 1000 and total_articles >= 10:
+            if user_metrics >= 2 and total_articles >= 2:
                 account_status.rank = 'Platinum'
                 print("User reached Platinum.")
-            elif user_metrics >= 500 and total_articles >= 5:
+            elif user_metrics >= 1 and total_articles >= 1:
                 account_status.rank = 'Gold'
                 print("User reached Gold.")
             else:

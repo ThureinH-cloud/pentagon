@@ -1,17 +1,27 @@
 {% extends 'writer/admin-dashboard.html' %}
 {% block writer %}
+
 <div class=" w-full bg-base-200 m-3 max-h-fit">
-    <table class="table">
+    <div>
+      <h2 class="text-center p-3 font-bold">Author Statistics</h2>
+
+    </div>
+    <table class="table mx-3 my-3">
       <!-- head -->
+      
       <thead>
         <tr>
           <th>Id</th>
           <th>Name</th>
           <th>Rank</th>
           <th>Total Published Articles</th>
+          
         </tr>
+        
       </thead>
+      
       <tbody>
+        
         <!-- row 1 -->
         
         {% for account in authors %}

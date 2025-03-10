@@ -58,17 +58,7 @@
         <li>
           <a class="ml-4" href="{% url 'writer-ranks' %}"><i class="fa-solid fa-ranking-star"></i>Ranks</a>
         </li>
-        <li>
-          <a class="ml-4" href="{% url 'check-comments' %}"><i class="fa-solid fa-comments"></i>Comments 
-          
-          {% if user_notifications %}
-          <div class="badge badge-secondary">
-            +{{user_notifications}}
-          </div>
-          {% endif %}
-            
-          </a>
-        </li>
+        
     </ul>
     {% block writer %}
        

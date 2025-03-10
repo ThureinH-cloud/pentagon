@@ -21,7 +21,7 @@
             </div>
             <div class="my-3">
               <h3 for="">Content</h3>
-              <textarea cols="30" required rows="10" name="content" id="content">{{article.content|safe}}</textarea>
+              <textarea cols="30" required rows="10" name="content" id="content"></textarea>
             </div>
             <div class="my-3">
               <h3 for="">Photo</h3>
@@ -51,7 +51,7 @@
               <div class="form-control">
                 <label class="cursor-pointer label">
                   <input type="checkbox"  required name="is_premium"
-                    value="true"
+                    value="True"
                     checked="checked"
                      class="checkbox checkbox-warning" />
                 </label>
@@ -64,7 +64,7 @@
     </div>
   </div>
 </div>
-<script src="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.umd.js"></script>
+<!-- <script src="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.umd.js"></script>
 <script>
   const {
     ClassicEditor,
@@ -89,5 +89,5 @@
           .catch( error => {
             console.error( error );
           } );
-</script>
+</script> -->
 {% endblock  %}

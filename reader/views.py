@@ -17,7 +17,6 @@ from django.urls import reverse
 from django.core.cache import cache
 
 # Create your views here.
-
 def log_recent_article(user_id, article_id):
     key = f"recent_articles:{user_id}"
     recent_articles = cache.get(key, [])
@@ -92,7 +91,7 @@ def article_detail(request,id):
         article_favorite=None
         
     if article.is_premium is True:
-        if article.author != request.user and account_status.rank is not "Platinum":
+        if article.author != request.user and account_status.rank != "Platinum":
             try:
                 Subscription.objects.get(user=request.user, is_active=True, subscription_plan='Premium')
             except Subscription.DoesNotExist:
@@ -100,7 +99,7 @@ def article_detail(request,id):
                     pass
                 return redirect("subscription-locked")          
     elif article.is_standard is True:
-        if article.author != request.user and account_status.rank is not "Gold":
+        if article.author != request.user and account_status.rank != "Gold":
             try:
                 sub=Subscription.objects.get(user=request.user, is_active=True)
                 if sub.subscription_plan == 'Standard' or 'Premium':
@@ -294,7 +293,14 @@ def subscription_locked(request):
 @login_required(login_url='sign-in')
 def subscription_plans(request):
     account_status=AccountStatus.objects.get(user=request.user)
-    return render(request, "reader/subscription-plans.html",{"account_status":account_status})
+    try:
+        Subscription.objects.get(user=request.user, is_active=True)
+        messages.error(request, "Subscription already exists or invalid data provided.")
+
+        return redirect("client-home")
+    except Subscription.DoesNotExist:
+        return render(request, "reader/subscription-plans.html",{"account_status":account_status})
+
 
 def search(request):
     pass
